@@ -48,11 +48,8 @@ export async function GET(request: NextRequest) {
 // POST create new subcategory
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
-    
     const body = await request.json();
-
-    console.log(body)
+    // console.log(body)
     
     // Validation
     if (!body.name || !body.category) {
@@ -61,6 +58,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    await connectDB();
 
     // Validate category exists
     const categoryExists = await Category.findById(body.category);
@@ -90,7 +89,7 @@ export async function POST(request: NextRequest) {
       category: body.category
     });
 
-    console.log(newSubCategory)
+    // console.log(newSubCategory)
 
 
     return NextResponse.json(

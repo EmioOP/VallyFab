@@ -11,21 +11,21 @@ export default function LandingPage() {
   const categories = [
     {
       name: "Ladies Dresses",
-      img: "https://img.freepik.com/free-photo/beautiful-woman-purple-sweater-skirt_1303-17493.jpg?t=st=1742139937~exp=1742143537~hmac=37a1e1733919cd0bc6efae8830399b17e0e21b6cfb7d62125c227f3d5adfaa3b&w=740",
+      img: "/women.jpeg", //should be changed to imagekit url
       db_name: "women",
     },
     {
       name: "Kids Collection",
-      img: "https://img.freepik.com/free-photo/wooden-hearts-children-s-hands_329181-7565.jpg?t=st=1742139446~exp=1742143046~hmac=f7bb395e7874b487b501388c378effe18a2572892b8d0a1657a9b5a6bbe43448&w=740",
+      img: "/kids.jpeg",
       db_name: "kids",
     },
     {
-      name: "Baby Bedding",
-      img: "https://img.freepik.com/free-photo/sweet-red-haired-baby-lying-back-small-mattress_74855-6093.jpg?t=st=1742139560~exp=1742143160~hmac=eb4ca2f2f5b2703b12b67943fc6bd881b80aad23a58b3effa863eacf9a66868c&w=996",
+      name: "Accessories",
+      img: "/accessories.jpeg",
       db_name: "accessories",
     },
     {
-      name: "Home Textiles",
+      name: "Home",
       img: "https://img.freepik.com/free-photo/home-decorations-interior-turquoise-blanket-wicker-basket-with-vase-flowers-candles_169016-2098.jpg?t=st=1742139732~exp=1742143332~hmac=38bcd340e055fa7d09649a933caa60eb4e217ca0e3396ff1169eaa85b3201d04&w=996",
       db_name: "home",
     },
@@ -67,7 +67,7 @@ export default function LandingPage() {
 
           <Link
             href="/shop"
-            className="bg-secondary lg:bg-accent  px-6 py-3 md:px-8 md:py-4 rounded-lg text-white hover:bg-secondary/90 transition-colors duration-300 text-base md:text-lg font-semibold "
+            className="bg-secondary lg:bg-secondary  px-6 py-3 md:px-8 md:py-4 rounded-lg text-white hover:bg-secondary/90 transition-colors duration-300 text-base md:text-lg font-semibold "
           >
             Explore Collections
           </Link>
@@ -123,7 +123,7 @@ export default function LandingPage() {
         <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8 md:mb-12">
           Our Collections
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
           {categories.map((category, index) => (
             <Link
               key={index}
@@ -198,9 +198,7 @@ export default function LandingPage() {
             >
               Discover Opportunities
             </Link>
-            <p className="text-primary/80 text-sm md:text-base">
-              Scroll down to contact us and learn more
-            </p>
+            
           </div>
         </div>
       </section>

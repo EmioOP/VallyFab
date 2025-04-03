@@ -2,7 +2,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { formatPrice } from "@/lib/utils"
-import { Badge } from "./ui/badge"
+// import { Badge } from "./ui/badge"
 import { IProduct } from "@/model/productModel"
 
 
@@ -55,9 +55,7 @@ export default function ProductCard({
           <p className="mt-1 text-xs text-gray-500">{category?.name}</p>
         </div>
         <div className="text-right">
-
             <p className="text-sm font-medium text-primary">{formatPrice(price)}</p>
-
         </div>
       </div>
     </div>

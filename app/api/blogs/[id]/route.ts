@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import Blog from "@/model/blogModel";
 import { getServerSession } from "next-auth";
 import { NextResponse, NextRequest } from "next/server";
+import { fileDelete } from "../../imagekit-auth/route";
 
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -83,13 +84,24 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     await connectDB();
 
-    const post = await Blog.findByIdAndDelete(id)
+
+    const post = await Blog.findById(id)
+    console.log(post)
 
     if (!post) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 })
     }
 
-    console.log(post)
+    const imageDeleted = await fileDelete(post.image)
+    console.log(imageDeleted)
+
+    if(imageDeleted){
+      return NextResponse.json({ error: "unable to delete blog image" }, { status: 500 })
+
+    }
+    // delete the post from db 
+    await Blog.findByIdAndDelete(id);
+
 
     return NextResponse.json({ message:"Post deleted" }, { status: 200 })
 

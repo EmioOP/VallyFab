@@ -15,6 +15,8 @@ export interface IProduct {
     sizes: string[];
     images: string[]; //4images per item
     stock: number;
+    material: string;
+    fabricSize:string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -22,12 +24,13 @@ export interface IProduct {
 const productSchema = new mongoose.Schema<IProduct>({
     name: {
         type: String,
-        required: true,
+        required: [true,"Product name is required"],
         trim: true
     },
     vallyId: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
     description: {
         type: String,
@@ -58,7 +61,10 @@ const productSchema = new mongoose.Schema<IProduct>({
         {
             type: String,
             required: true,
-            enum: ["S", "M", "L", "XL", "XXL"],
+            enum: {
+                values:["S", "M", "L", "XL", "XXL"],
+                message:"Please select a valid size"
+            },
         }
     ],
     images: [
@@ -66,9 +72,16 @@ const productSchema = new mongoose.Schema<IProduct>({
             type: String,
             required: true
         }
-    ]
+    ],
+    //added newly
+    material:{
+        type:String,
+        
+    },
+    fabricSize:{
+        type:String, //to be changed to legth{} and width{}
+    }
 }, { timestamps: true })
-
 
 const Product = mongoose.models.Product || mongoose.model<IProduct>("Product", productSchema)
 

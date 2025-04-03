@@ -172,7 +172,7 @@ export default function BlogPage() {
                 <span>{post.readTime}</span>
               </div>
               <h2 className="text-xl font-bold text-primary">
-                <Link href={`/blogs/${post.slug}`} className="hover:text-rosegold">
+                <Link href={`/blogs/${post._id}`} className="hover:text-rosegold">
                   {post.title}
                 </Link>
               </h2>
