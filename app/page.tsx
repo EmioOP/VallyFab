@@ -11,12 +11,12 @@ export default function LandingPage() {
   const categories = [
     {
       name: "Ladies Dresses",
-      img: "/women.jpeg", //should be changed to imagekit url
+      img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg", //should be changed to imagekit url
       db_name: "women",
     },
     {
       name: "Kids Collection",
-      img: "/kids.jpeg",
+      img: "https://ik.imagekit.io/bufohim2jd/product-image_9vCi-sYAT.jpg",
       db_name: "kids",
     },
     {

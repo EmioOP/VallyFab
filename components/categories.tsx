@@ -5,19 +5,19 @@ const categories = [
   {
     id: "women",
     name: "Women",
-    image: "https://img.freepik.com/free-photo/portrait-beautiful-woman-holding-shopping-bag_329181-18532.jpg?t=st=1742113260~exp=1742116860~hmac=84c840acb5618443b727103aac6fee9443dcdf89191f8e15b946a13ab37d6ad8&w=740",
+    image: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg",
     db_name: "women"
   },
   {
     id: "tops",
     name: "Kids",
-    image: "https://img.freepik.com/free-photo/young-teenage-girl-recording-reels-herself-outdoors-social-media_23-2149749821.jpg?t=st=1742113341~exp=1742116941~hmac=7640d5fbb135978f0fa8a56fe3c866a278222c1a6a2a1d9e271a4f1cf9c1fd6a&w=740",
+    image: "/kids.jpeg",
     db_name: "kids"
   },
   {
     id: "accessories",
     name: "Accessories",
-    image: "https://img.freepik.com/free-photo/full-body-portrait-happy-smiling-beautiful-young-woman-white_231208-9033.jpg?t=st=1742113609~exp=1742117209~hmac=af3c47ca4dfba7ed9939d440197049519712de8796cf6cfad4a07ca57d3f60a2&w=740",
+    image: "/accessories.jpeg",
     db_name: "accessories"
   },
   {

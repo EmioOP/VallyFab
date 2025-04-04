@@ -15,6 +15,13 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "ik.imagekit.io",
+          port: "",
+        },
+      ],
   },
   experimental: {
     webpackBuildWorker: false,
