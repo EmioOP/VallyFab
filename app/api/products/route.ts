@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
 
         // Validate required fields including vallyId and images array
         if (!body.name || !body.vallyId || !body.price || !body.category || 
-            !body.brand || !body.sizes || !body.images || !body.stock) {
+            !body.brand || !body.sizes || !body.images || !body.stock ||!body.colors || !body.material ) {
             return NextResponse.json({ error: "All fields are required" }, { status: 400 });
         }
 
@@ -104,6 +104,9 @@ export async function POST(request: NextRequest) {
             images: body.images.map((image: string) => 
                 `${process.env.NEXT_PUBLIC_URL_ENDPOINT}${image}`
             ),
+            material:body.material,
+            colors:body.colors,
+            fabricSize:body.fabricSize || "",
             stock: body.stock
         });
 

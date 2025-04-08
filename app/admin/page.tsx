@@ -10,7 +10,7 @@ export default function Admin() {
 
       <div className="flex flex-wrap">
 
-      <div className="min-h-full p-6 flex">
+      <div className="min-h-full p-6 flex ">
         <div className="card w-96 bg-base-100 card-md shadow-sm ">
           <div className="card-body">
             <h2 className="card-title">Products</h2>
@@ -20,13 +20,13 @@ export default function Admin() {
             </p>
             <div className="justify-end card-actions">
               <Link href={'/admin/products'}>
-                <button className="btn btn-primary">Go to Products</button>
+                <button className="btn bg-accent rounded px-2 my-2 text-white">Go to Products</button>
               </Link>
             </div>
           </div>
         </div>
       </div>
-      <div className="min-h-full p-6 flex">
+      <div className="min-h-full p-6 flex ">
         <div className="card w-96 bg-base-100 card-md shadow-sm ">
           <div className="card-body">
             <h2 className="card-title">Categories</h2>
@@ -36,7 +36,7 @@ export default function Admin() {
             </p>
             <div className="justify-end card-actions">
               <Link href={'/admin/categories'}>
-                <button className="btn btn-primary">Go to Categories</button>
+                <button className="btn bg-accent rounded px-2 my-2 text-white">Go to Categories</button>
               </Link>
             </div>
           </div>

@@ -13,10 +13,11 @@ export interface IProduct {
     subCategory: mongoose.Types.ObjectId;
     brand: string;
     sizes: string[];
+    colors: string[];
     images: string[]; //4images per item
     stock: number;
     material: string;
-    fabricSize:string;
+    fabricSize: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -24,13 +25,13 @@ export interface IProduct {
 const productSchema = new mongoose.Schema<IProduct>({
     name: {
         type: String,
-        required: [true,"Product name is required"],
+        required: [true, "Product name is required"],
         trim: true
     },
     vallyId: {
         type: String,
         required: true,
-        unique:true
+        unique: true
     },
     description: {
         type: String,
@@ -62,10 +63,18 @@ const productSchema = new mongoose.Schema<IProduct>({
             type: String,
             required: true,
             enum: {
-                values:["S", "M", "L", "XL", "XXL"],
-                message:"Please select a valid size"
+                values: ["S", "M", "L", "XL", "XXL"],
+                message: "Please select a valid size"
             },
         }
+    ],
+    colors: [
+        {
+            type: String,
+            required: true,
+            trim:true
+        }
+
     ],
     images: [
         {
@@ -74,13 +83,14 @@ const productSchema = new mongoose.Schema<IProduct>({
         }
     ],
     //added newly
-    material:{
-        type:String,
-        
+    material: {
+        type: String,
+
     },
-    fabricSize:{
-        type:String, //to be changed to legth{} and width{}
-    }
+    fabricSize: {
+        type: String, //to be changed to legth{} and width{}
+    },
+    
 }, { timestamps: true })
 
 const Product = mongoose.models.Product || mongoose.model<IProduct>("Product", productSchema)

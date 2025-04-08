@@ -133,7 +133,7 @@ Please confirm availability and proceed with the order.`;
             Home
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/products" className="hover:text-rosegold">
+          <Link href="/shop/products" className="hover:text-rosegold">
             Products
           </Link>
           <span className="mx-2">/</span>
@@ -207,7 +207,7 @@ Please confirm availability and proceed with the order.`;
             </p>
           </div>
 
-          {/* {product.colors && (
+          {product.colors && (
             <div>
               <h3 className="font-medium mb-2">Color</h3>
               <div className="flex gap-2">
@@ -226,7 +226,7 @@ Please confirm availability and proceed with the order.`;
                 ))}
               </div>
             </div>
-          )} */}
+          )}
 
           {product.sizes && (
             <div>
@@ -291,7 +291,7 @@ Please confirm availability and proceed with the order.`;
           </div>
 
           <div className="pt-4 border-t flex items-center justify-between text-sm text-gray-500">
-            <div>SKU: {product._id?.toString()}</div>
+            <div>Vally ID: {product.vallyId?.toString()}</div>
             <button className="flex items-center hover:text-rosegold">
               <Share2 className="mr-1 h-4 w-4" />
               Share
@@ -307,19 +307,25 @@ Please confirm availability and proceed with the order.`;
             <button className="px-4 py-2 font-medium text-rosegold border-b-2 border-rosegold">
               Product Details
             </button>
-            <button className="px-4 py-2 font-medium text-gray-500 hover:text-rosegold">
+            {/* <button className="px-4 py-2 font-medium text-gray-500 hover:text-rosegold">
               Reviews
             </button>
             <button className="px-4 py-2 font-medium text-gray-500 hover:text-rosegold">
               Shipping & Returns
-            </button>
+            </button> */}
           </div>
         </div>
 
         <div className="py-6">
           <div className="prose max-w-none text-gray-600">
+
+            <h4 className="text-primary font-medium mb-2">Desciption:</h4>
+            <p className="text-gray-600">
+              {product.description || "No description available"}
+            </p>
+
             <h4 className="text-primary font-medium mb-2">Material:</h4>
-            <p>{product.material || "Premium quality fabric"}</p>
+            <p>{product.material || "No Fabric Details Available"}</p>
 
             <h4 className="text-primary font-medium mt-4 mb-2">
               Care Instructions:

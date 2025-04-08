@@ -7,7 +7,9 @@ import { Loader2 } from "lucide-react";
 import { useNotification } from "./Notification";
 import { apiClient, ProductFormData } from "@/lib/api-client";
 import { useState, useEffect } from "react";
-import { ICategory, ISubCategory } from "@/model/categoryModel";
+import { ICategory } from "@/model/categoryModel";
+import { ISubCategory } from "@/model/subCategoryModel";
+import { COLOR_OPTIONS } from "@/lib/constants";
 
 function FormInput({
   label,
@@ -21,7 +23,7 @@ function FormInput({
   id: string;
 }) {
   return (
-    <div className="form-control w-full">
+    <div className="form-control w-full ">
       <label htmlFor={id} className="label">
         <span className="label-text font-medium" aria-required={!!error}>
           {label}
@@ -45,6 +47,8 @@ export default function AdminProductForm() {
   const [loadingSubCategories, setLoadingSubCategories] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<string[]>(["M"]);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [currentColor, setCurrentColor] = useState("");
 
   const {
     register,
@@ -65,14 +69,40 @@ export default function AdminProductForm() {
       sizes: ["M"],
       images: [],
       stock: 0,
+      material: "",
+      fabricSize: "",
     },
   });
+
+  useEffect(() => {
+    setValue("colors", selectedColors);
+  }, [selectedColors, setValue]);
+
+  const addColor = () => {
+    const colorName = COLOR_OPTIONS.find(
+      (c) => c.toLowerCase() === currentColor.trim().toLowerCase()
+    );
+
+    if (!colorName) {
+      showNotification("Invalid color name", "error");
+      return;
+    }
+
+    if (!selectedColors.includes(colorName)) {
+      setSelectedColors((prev) => [...prev, colorName]);
+      setCurrentColor("");
+    }
+  };
+
+  const removeColor = (colorToRemove: string) => {
+    setSelectedColors((prev) => prev.filter((c) => c !== colorToRemove));
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await fetch("/api/categories");
-        if (!response.ok) throw new Error('Failed to fetch categories');
+        if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
         setCategories(data.categories);
       } catch (error) {
@@ -85,16 +115,18 @@ export default function AdminProductForm() {
   }, [showNotification]);
 
   useEffect(() => {
-    const categoryId = watch('category');
+    const categoryId = watch("category");
     if (categoryId) {
       const fetchSubCategories = async () => {
         try {
           setLoadingSubCategories(true);
-          const response = await fetch(`/api/subcategories?categoryId=${categoryId}`);
-          if (!response.ok) throw new Error('Failed to fetch subcategories');
+          const response = await fetch(
+            `/api/subcategories?categoryId=${categoryId}`
+          );
+          if (!response.ok) throw new Error("Failed to fetch subcategories");
           const data = await response.json();
           setSubCategories(data.subCategories);
-          setValue('subCategory', '');
+          setValue("subCategory", "");
         } catch (error) {
           showNotification("Failed to load subcategories", "error");
           setSubCategories([]);
@@ -106,7 +138,7 @@ export default function AdminProductForm() {
     } else {
       setSubCategories([]);
     }
-  }, [watch('category'), showNotification, setValue]);
+  }, [watch("category"), showNotification, setValue]);
 
   const handleUploadSuccess = (response: IKUploadResponse) => {
     if (uploadedImages.length >= 4) {
@@ -127,14 +159,20 @@ export default function AdminProductForm() {
 
   const handleSizeChange = (size: string) => {
     const newSizes = selectedSizes.includes(size)
-      ? selectedSizes.filter(s => s !== size)
+      ? selectedSizes.filter((s) => s !== size)
       : [...selectedSizes, size];
-      
+
     setSelectedSizes(newSizes);
     setValue("sizes", newSizes);
   };
 
   const onSubmit = async (data: ProductFormData) => {
+    console.log(data)
+    if (selectedColors.length === 0) {
+      showNotification("Please select at least one color", "error");
+      return;
+    }
+
     if (data.sizes.length === 0) {
       showNotification("Please select at least one size", "error");
       return;
@@ -167,6 +205,7 @@ export default function AdminProductForm() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Existing fields */}
           <FormInput
             label="Vally ID"
             error={errors.vallyId?.message}
@@ -175,7 +214,7 @@ export default function AdminProductForm() {
             <input
               id="vallyId"
               type="text"
-              className={`input input-bordered w-full ${
+              className={`input input-bordered w-full border${
                 errors.vallyId ? "input-error" : ""
               }`}
               placeholder="Enter Vally ID"
@@ -194,7 +233,7 @@ export default function AdminProductForm() {
             <input
               id="name"
               type="text"
-              className={`input input-bordered w-full ${
+              className={`input input-bordered w-full border ${
                 errors.name ? "input-error" : ""
               }`}
               placeholder="Enter product name"
@@ -212,7 +251,7 @@ export default function AdminProductForm() {
               step="0.01"
               min="0.01"
               max="10000"
-              className={`input input-bordered w-full ${
+              className={`input input-bordered w-full border ${
                 errors.price ? "input-error" : ""
               }`}
               placeholder="0.00"
@@ -232,7 +271,7 @@ export default function AdminProductForm() {
           >
             <select
               id="category"
-              className={`select select-bordered w-full ${
+              className={`select select-bordered w-full border ${
                 errors.category ? "select-error" : ""
               }`}
               disabled={loadingCategories || categories.length === 0}
@@ -246,7 +285,10 @@ export default function AdminProductForm() {
                 <>
                   <option value="">Select a category</option>
                   {categories.map((category: ICategory) => (
-                    <option key={category._id.toString()} value={category._id.toString()}>
+                    <option
+                      key={category._id.toString()}
+                      value={category._id.toString()}
+                    >
                       {category.name}
                     </option>
                   ))}
@@ -262,13 +304,19 @@ export default function AdminProductForm() {
           >
             <select
               id="subCategory"
-              className={`select select-bordered w-full ${
+              className={`select select-bordered w-full border ${
                 errors.subCategory ? "select-error" : ""
               }`}
-              disabled={!watch('category') || loadingSubCategories || subCategories.length === 0}
-              {...register("subCategory", { required: "Subcategory is required" })}
+              disabled={
+                !watch("category") ||
+                loadingSubCategories ||
+                subCategories.length === 0
+              }
+              {...register("subCategory", {
+                required: "Subcategory is required",
+              })}
             >
-              {!watch('category') ? (
+              {!watch("category") ? (
                 <option disabled>Select a category first</option>
               ) : loadingSubCategories ? (
                 <option disabled>Loading subcategories...</option>
@@ -278,7 +326,10 @@ export default function AdminProductForm() {
                 <>
                   <option value="">Select a subcategory</option>
                   {subCategories.map((subCategory) => (
-                    <option key={subCategory._id.toString()} value={subCategory._id.toString()}>
+                    <option
+                      key={subCategory._id.toString()}
+                      value={subCategory._id.toString()}
+                    >
                       {subCategory.name}
                     </option>
                   ))}
@@ -291,7 +342,7 @@ export default function AdminProductForm() {
             <input
               id="brand"
               type="text"
-              className={`input input-bordered w-full ${
+              className={`input input-bordered w-full border ${
                 errors.brand ? "input-error" : ""
               }`}
               placeholder="Enter brand name"
@@ -320,6 +371,44 @@ export default function AdminProductForm() {
             />
           </FormInput>
 
+          {/* New Material Field */}
+          <FormInput
+            label="Material"
+            error={errors.material?.message}
+            id="material"
+          >
+            <input
+              id="material"
+              type="text"
+              className={`input input-bordered w-full border ${
+                errors.material ? "input-error" : ""
+              }`}
+              placeholder="Enter material (e.g., Cotton)"
+              {...register("material", {
+                maxLength: { value: 100, message: "Maximum 100 characters" },
+              })}
+            />
+          </FormInput>
+
+          {/* New Fabric Size Field */}
+          <FormInput
+            label="Fabric Size"
+            error={errors.fabricSize?.message}
+            id="fabricSize"
+          >
+            <input
+              id="fabricSize"
+              type="text"
+              className={`input input-bordered w-full border ${
+                errors.fabricSize ? "input-error" : ""
+              }`}
+              placeholder="Enter fabric dimensions (e.g., 150cm x 200cm)"
+              {...register("fabricSize", {
+                maxLength: { value: 50, message: "Maximum 50 characters" },
+              })}
+            />
+          </FormInput>
+
           <FormInput
             label="Available Sizes"
             error={errors.sizes?.message}
@@ -336,11 +425,66 @@ export default function AdminProductForm() {
                     value={size}
                     checked={selectedSizes.includes(size)}
                     onChange={() => handleSizeChange(size)}
-                    className="checkbox checkbox-primary"
+                    className="checkbox checkbox-primary "
                   />
                   <span className="font-medium">{size}</span>
                 </label>
               ))}
+            </div>
+          </FormInput>
+
+          <FormInput
+            label="Available Colors"
+            error={errors.colors?.message}
+            id="colors"
+          >
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  list="colors-list"
+                  value={currentColor}
+                  onChange={(e) => setCurrentColor(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && addColor()}
+                  placeholder="Select or type a color"
+                  className="input input-bordered w-full border"
+                />
+                <button
+                  type="button"
+                  onClick={addColor}
+                  className="btn bg-secondary rounded border "
+                >
+                  Add Color
+                </button>
+              </div>
+
+              <datalist id="colors-list">
+                {COLOR_OPTIONS.map((color) => (
+                  <option key={color} value={color} />
+                ))}
+              </datalist>
+
+              <div className="flex flex-wrap gap-2">
+                {selectedColors.map((color) => (
+                  <div
+                    key={color}
+                    className="badge badge-outline gap-1 items-center pl-2"
+                  >
+                    <div
+                      className="w-3 h-3 rounded-full border border-gray-300"
+                      style={{ backgroundColor: color }}
+                    />
+                    {color}
+                    <button
+                      type="button"
+                      onClick={() => removeColor(color)}
+                      className="ml-1"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </FormInput>
         </div>
@@ -352,7 +496,7 @@ export default function AdminProductForm() {
         >
           <textarea
             id="description"
-            className={`textarea textarea-bordered w-full h-32 ${
+            className={`textarea textarea-bordered w-full h-32 border${
               errors.description ? "textarea-error" : ""
             }`}
             placeholder="Enter product description"
@@ -395,9 +539,9 @@ export default function AdminProductForm() {
 
         <button
           type="submit"
-          className="btn btn-primary w-full mt-8"
+          className="btn bg-secondary p-2 rounded w-full mt-8"
           disabled={isSubmitting}
-          aria-label={isSubmitting ? "Creating product" : "Create product"   }
+          aria-label={isSubmitting ? "Creating product" : "Create product"}
         >
           {isSubmitting ? (
             <>
