@@ -7,7 +7,7 @@ import { useCart } from "./cart-provider";
 import { Button } from "./ui/button";
 import { ShoppingBag, Menu, X, Search, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Header() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function Header() {
   const userMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
-
+  const pathname = usePathname();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -120,14 +120,16 @@ export default function Header() {
 
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
+            {pathname.startsWith("/shop") && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+            )}
 
             {/* User */}
             {/* <Link href="/account">
@@ -154,9 +156,10 @@ export default function Header() {
                   >
                     <div className="flex items-center">
                       <User className="mr-2 h-4 w-4" />
-                      <span className="min-w-0">Profile: {" "}
+                      <span className="min-w-0">
+                        Profile:{" "}
                         <span className="">{session?.user?.email}</span>
-                        </span>
+                      </span>
                     </div>
                   </Link>
                   <Link

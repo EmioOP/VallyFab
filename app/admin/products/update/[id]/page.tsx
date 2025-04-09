@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import FileUpload from "@/app/components/FileUpload";
+import FileUpload from "@/components/FileUpload";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
 import { IProduct } from "@/model/productModel";
 

@@ -2,13 +2,25 @@
 
 import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
+import useEmblaCarousel from 'embla-carousel-react'
+import Autoplay from 'embla-carousel-autoplay'
+
 
 export default function Hero() {
   const router = useRouter()
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })])
 
-  const handleShop = ()=>{
+  const handleShop = () => {
     router.push("/shop/products")
   }
+
+  const images = [
+    'https://ik.imagekit.io/bufohim2jd/WhatsApp%20Image%202025-04-02%20at%2012.17.02%20PM.jpeg?updatedAt=1744206105751',
+    'https://ik.imagekit.io/bufohim2jd/WhatsApp%20Image%202025-04-02%20at%2012.18.17%20PM.jpeg?updatedAt=1744206105184',
+    'https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg',
+    'https://ik.imagekit.io/bufohim2jd/WhatsApp%20Image%202025-04-02%20at%2012.33.17%20PM%20(3).jpeg?updatedAt=1744206114318'
+  ]
+
   return (
     <section className="relative bg-white">
       <div className="container mx-auto px-4">
@@ -30,16 +42,23 @@ export default function Hero() {
               </Button>
             </div>
           </div>
-          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] bg-gray-100 rounded-lg overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-santoriniblue/20 to-rosegold/20" />
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url('https://img.freepik.com/free-vector/flat-design-fashion-designer-concept_23-2148821031.jpg?t=st=1742112713~exp=1742116313~hmac=6eac39d50f78d461d65c2ca7d44ffe175eaf42d5b1830b5e2755901455b13a20&w=740')" }}
-            />
+          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] w-full rounded-lg overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-santoriniblue/20 to-rosegold/20 z-10" />
+            <div className="embla h-full" ref={emblaRef}>
+              <div className="embla__container h-full">
+                {images.map((image, index) => (
+                  <div className="embla__slide relative h-full w-full" key={index}>
+                    <div
+                      className="absolute inset-0 bg-cover bg-center"
+                      style={{ backgroundImage: `url('${image}')` }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   )
 }
-

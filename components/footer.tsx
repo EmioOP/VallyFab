@@ -32,7 +32,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  href="/products"
+                  href="/shop/products"
                   className="text-gray-600 hover:text-rosegold"
                 >
                   All Products
@@ -40,7 +40,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/fabrics"
+                  href="/shop"
                   className="text-gray-600 hover:text-rosegold"
                 >
                   Fabrics
@@ -48,7 +48,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/collections"
+                  href="/shop/products"
                   className="text-gray-600 hover:text-rosegold"
                 >
                   Collections
@@ -56,7 +56,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/new-arrivals"
+                  href="/shop/products"
                   className="text-gray-600 hover:text-rosegold"
                 >
                   New Arrivals
@@ -64,7 +64,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/sale"
+                  href="/shop/products"
                   className="text-gray-600 hover:text-rosegold"
                 >
                   Sale

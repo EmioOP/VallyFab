@@ -71,6 +71,8 @@ export default function AdminProductForm() {
       stock: 0,
       material: "",
       fabricSize: "",
+      typeOfProduct:""
+      
     },
   });
 
@@ -410,6 +412,24 @@ export default function AdminProductForm() {
           </FormInput>
 
           <FormInput
+            label="Type Of Product"
+            error={errors.typeOfProduct?.message}
+            id="typeOfProduct"
+          >
+            <input
+              id="typeOfProduct"
+              type="text"
+              className={`input input-bordered w-full border ${
+                errors.fabricSize ? "input-error" : ""
+              }`}
+              placeholder="Enter The Type of Product"
+              {...register("typeOfProduct", {
+                maxLength: { value: 50, message: "Maximum 50 characters" },
+              })}
+            />
+          </FormInput>
+
+          <FormInput
             label="Available Sizes"
             error={errors.sizes?.message}
             id="sizes"
@@ -487,6 +507,8 @@ export default function AdminProductForm() {
               </div>
             </div>
           </FormInput>
+
+
         </div>
 
         <FormInput

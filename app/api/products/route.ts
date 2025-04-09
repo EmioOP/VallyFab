@@ -107,6 +107,7 @@ export async function POST(request: NextRequest) {
             material:body.material,
             colors:body.colors,
             fabricSize:body.fabricSize || "",
+            typeOfProduct:body.typeOfProduct,
             stock: body.stock
         });
 

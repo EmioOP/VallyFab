@@ -183,29 +183,30 @@ Please confirm availability and proceed with the order.`;
             <h1 className="text-3xl font-bold text-primary">{product.name}</h1>
             <div className="mt-2 flex items-center gap-2">
               <div className="flex">
-                {[...Array(5)].map((_, i) => (
+                {/* {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`h-5 w-5 ${
                       i < 4 ? "fill-rosegold text-rosegold" : "text-gray-300"
                     }`}
                   />
-                ))}
+                ))} */}
               </div>
-              <span className="text-sm text-gray-500">(120 reviews)</span>
+              {/* <span className="text-sm text-gray-500">Product By:{product.brand}</span> */}
             </div>
           </div>
+          <span className="text-sm text-gray-500">Product By:{product.brand}</span>
 
           <div className="text-2xl font-bold text-primary">
             ₹{product.price}
           </div>
 
-          <div>
+          {/* <div>
             <h3 className="font-medium mb-2">Description</h3>
             <p className="text-gray-600">
               {product.description || "No description available"}
             </p>
-          </div>
+          </div> */}
 
           {product.colors && (
             <div>
@@ -327,14 +328,23 @@ Please confirm availability and proceed with the order.`;
             <h4 className="text-primary font-medium mb-2">Material:</h4>
             <p>{product.material || "No Fabric Details Available"}</p>
 
-            <h4 className="text-primary font-medium mt-4 mb-2">
+            <h4 className="text-primary font-medium mb-2">Type:</h4>
+            <p>{product.typeOfProduct || "Type Not Available"}</p>
+
+              {product.fabricSize ? <div>
+                <h4 className="text-primary font-medium mb-2">Fabric Size:</h4>
+            <p>{product.fabricSize || "Fabric Length and Width are not Applicable"}</p>
+              </div>  : "" }
+            
+
+            {/* <h4 className="text-primary font-medium mt-4 mb-2">
               Care Instructions:
-            </h4>
-            <ul className="list-disc pl-5 space-y-1">
+            </h4> */}
+            {/* <ul className="list-disc pl-5 space-y-1">
               {product.careInstructions?.map((instruction, index) => (
                 <li key={index}>{instruction}</li>
               )) || <li>Machine wash cold, tumble dry low</li>}
-            </ul>
+            </ul> */}
           </div>
         </div>
       </div>

@@ -2,18 +2,32 @@ import { withAuth } from "next-auth/middleware"
 import { NextResponse } from "next/server"
 
 export default withAuth(
-    function middleware() {
+    function middleware(req) {
+        const { pathname } = req.nextUrl
+        const token = req.nextauth.token
+
+        // Handle authenticated users on auth pages
+        if (token && (pathname === "/login" || pathname === "/register")) {
+            return NextResponse.redirect(new URL("/", req.url)) // Redirect to home
+        }
+
+        // Handle admin routes
+        if (pathname.startsWith("/admin") && token?.role !== "admin") {
+            return NextResponse.redirect(new URL("/", req.url))
+        }
+
         return NextResponse.next()
     },
     {
         callbacks: {
             authorized: ({ token, req }) => {
                 const { pathname } = req.nextUrl
-                 // Redirect logged-in users from login/register pages
-                 if ((pathname === "/login" || pathname === "/register") && token) {
-                    return false
-                }
+                // Redirect logged-in users from login/register pages
+                //  if (token && (pathname === "/login" || pathname === "/register") ) {
+                //     return false
+                // }
 
+            
                 // Public routes
                 if (
                     pathname.startsWith("/api/auth") ||
@@ -33,6 +47,7 @@ export default withAuth(
                 if (pathname.startsWith("/admin")) {
                     return token?.role === "admin"
                 }
+
 
                 // All other routes are public
                 return true

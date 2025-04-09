@@ -18,6 +18,7 @@ export interface IProduct {
     stock: number;
     material: string;
     fabricSize: string;
+    typeOfProduct:string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -85,11 +86,16 @@ const productSchema = new mongoose.Schema<IProduct>({
     //added newly
     material: {
         type: String,
+        required:true
 
     },
     fabricSize: {
         type: String, //to be changed to legth{} and width{}
     },
+    typeOfProduct:{
+        type:String,
+        
+    }
     
 }, { timestamps: true })
 
