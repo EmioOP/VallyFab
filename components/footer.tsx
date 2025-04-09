@@ -17,7 +17,7 @@ export default function Footer() {
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="#" className="text-gray-600 hover:text-rosegold">
+              <Link href="https://www.instagram.com/vallyfabricsfashion/" className="text-gray-600 hover:text-rosegold">
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
@@ -85,10 +85,18 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/shipping"
+                  href="/refund-and-return"
                   className="text-gray-600 hover:text-rosegold"
                 >
-                  Shipping & Returns
+                  Returns and Refunds
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy-policy"
+                  className="text-gray-600 hover:text-rosegold"
+                >
+                  Privacy Policy
                 </Link>
               </li>
             </ul>

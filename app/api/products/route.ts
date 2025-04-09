@@ -41,6 +41,8 @@ export async function GET(request: NextRequest) {
         // Filter by category
         if (categoryIds.length > 0) {
             filter.category = { $in: categoryIds };
+
+            
         }
 
         // Sorting logic

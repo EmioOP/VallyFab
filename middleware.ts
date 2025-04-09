@@ -22,11 +22,6 @@ export default withAuth(
         callbacks: {
             authorized: ({ token, req }) => {
                 const { pathname } = req.nextUrl
-                // Redirect logged-in users from login/register pages
-                //  if (token && (pathname === "/login" || pathname === "/register") ) {
-                //     return false
-                // }
-
             
                 // Public routes
                 if (

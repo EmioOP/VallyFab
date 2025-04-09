@@ -4,7 +4,7 @@ import ProductsGrid from "@/components/ProductsGrid";
 export default function ProductsPage() {
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
-      <h1 className="text-3xl font-bold text-primary mb-8">All Products</h1>
+      {/* <h1 className="text-3xl font-bold text-primary mb-8">All Products</h1> */}
 
       {/* Wrap the Client Component that uses useSearchParams in Suspense */}
       <Suspense fallback={<ProductsPageSkeleton />}>

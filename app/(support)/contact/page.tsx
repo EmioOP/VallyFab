@@ -124,8 +124,8 @@ export default function ContactPage() {
                     <h3 className="font-semibold text-primary">Our Address</h3>
                     <p className="text-primary/90">
                       Vally Fabrics & Fashion<br />
-                      123 Fashion Street<br />
-                      Colombo 03, Sri Lanka
+                      Kaitheri-670701<br />
+                      India
                     </p>
                   </div>
                 </div>
@@ -133,10 +133,10 @@ export default function ContactPage() {
                 <div className="flex items-start gap-4">
                   <Phone className="w-6 h-6 text-secondary mt-1" />
                   <div>
-                    <h3 className="font-semibold text-primary">Phone</h3>
+                    <h3 className="font-semibold text-primary">Phone/Whatsapp</h3>
                     <p className="text-primary/90">
-                      +94 112 345 678<br />
-                      +94 765 432 109
+                      +91 94005 62949<br />
+                      +91 490 299 3949
                     </p>
                   </div>
                 </div>
@@ -146,8 +146,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-primary">Email</h3>
                     <p className="text-primary/90">
-                      hello@vallyfab.com<br />
-                      support@vallyfab.com
+                      enquiry@vallyfab.com
                     </p>
                   </div>
                 </div>

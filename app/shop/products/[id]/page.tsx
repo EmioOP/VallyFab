@@ -278,7 +278,7 @@ Please confirm availability and proceed with the order.`;
           <div className="flex flex-col sm:flex-row gap-4">
             <Button className="flex-1 bg-rosegold hover:bg-rosegold/90" onClick={handleBuyNow}>
               <Heart className="mr-2 h-4 w-4" />
-              Buy Now - Throgh WhatsApp!
+              Buy Now - Throgh WhatsApp
             </Button>
 
             <Button
@@ -320,10 +320,6 @@ Please confirm availability and proceed with the order.`;
         <div className="py-6">
           <div className="prose max-w-none text-gray-600">
 
-            <h4 className="text-primary font-medium mb-2">Desciption:</h4>
-            <p className="text-gray-600">
-              {product.description || "No description available"}
-            </p>
 
             <h4 className="text-primary font-medium mb-2">Material:</h4>
             <p>{product.material || "No Fabric Details Available"}</p>
@@ -336,6 +332,10 @@ Please confirm availability and proceed with the order.`;
             <p>{product.fabricSize || "Fabric Length and Width are not Applicable"}</p>
               </div>  : "" }
             
+              <h4 className="text-primary font-medium mb-2">Desciption:</h4>
+            <p className="text-gray-600">
+              {product.description || "No description available"}
+            </p>
 
             {/* <h4 className="text-primary font-medium mt-4 mb-2">
               Care Instructions:

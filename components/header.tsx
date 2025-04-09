@@ -120,7 +120,7 @@ export default function Header() {
 
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
-            {pathname.startsWith("/shop") && (
+            {pathname.startsWith("/shop") ? (
               <Button
                 variant="ghost"
                 size="icon"
@@ -129,7 +129,14 @@ export default function Header() {
               >
                 <Search className="h-5 w-5" />
               </Button>
-            )}
+            ) : (<Button
+            variant="disableBtn"
+            size="icon"
+            aria-label="Search"
+            
+          >
+            <Search className="h-5 w-5 hidden " />
+          </Button>) }
 
             {/* User */}
             {/* <Link href="/account">
@@ -255,7 +262,7 @@ export default function Header() {
         )}
 
         {/* Search bar */}
-        {isSearchOpen && (
+        {isSearchOpen && pathname.startsWith("/shop") && (
           <div className="border-t py-2">
             <div className="relative">
               <input

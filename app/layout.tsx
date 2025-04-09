@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Urbanist } from "next/font/google"
+import { Poppins } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -9,8 +9,8 @@ import { CartProvider } from "@/components/cart-provider"
 import Providers from "@/components/Providers";
 
 
-// const inter = Inter({ subsets: ["latin"] })
-const inter = Urbanist({ subsets: ["latin"],weight:"400" })
+
+const inter = Poppins({ subsets: ["latin"],weight:"400"})
 
 
 export const metadata: Metadata = {

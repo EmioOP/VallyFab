@@ -105,7 +105,7 @@ export default function CartPage() {
           </div>
 
           <div className="mt-6 flex justify-between items-center">
-            <Link href="/products">
+            <Link href="/shop/products">
               <Button variant="outline">Continue Shopping</Button>
             </Link>
             <Button variant="outline" className="text-red-500 hover:bg-red-50">
