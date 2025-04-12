@@ -29,6 +29,22 @@ export default function Admin() {
       <div className="min-h-full p-6 flex ">
         <div className="card w-96 bg-base-100 card-md shadow-sm ">
           <div className="card-body">
+            <h2 className="card-title">Blogs</h2>
+            <p>
+              List all the Blogs in the databse, create a new blog, update
+              any exsisting blog, delete any blog.
+            </p>
+            <div className="justify-end card-actions">
+              <Link href={'/admin/blogs'}>
+                <button className="btn bg-accent rounded px-2 my-2 text-white">Go to Blogs</button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="min-h-full p-6 flex ">
+        <div className="card w-96 bg-base-100 card-md shadow-sm ">
+          <div className="card-body">
             <h2 className="card-title">Categories</h2>
             <p>
               List all the Categories in the databse, create a new category, update

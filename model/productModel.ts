@@ -23,6 +23,17 @@ export interface IProduct {
     updatedAt: Date;
 }
 
+const productVarientSchema = new mongoose.Schema({
+    color:{
+        type:String,
+        required:true
+    },
+    images:{
+        type:String,
+        required:true
+    }
+})
+
 const productSchema = new mongoose.Schema<IProduct>({
     name: {
         type: String,
@@ -64,7 +75,7 @@ const productSchema = new mongoose.Schema<IProduct>({
             type: String,
             required: true,
             enum: {
-                values: ["S", "M", "L", "XL", "XXL"],
+                values: ["XS","S", "M", "L", "XL", "XXL","XXXL"],
                 message: "Please select a valid size"
             },
         }
@@ -73,7 +84,8 @@ const productSchema = new mongoose.Schema<IProduct>({
         {
             type: String,
             required: true,
-            trim:true
+            trim:true,
+            unique:true
         }
 
     ],
@@ -83,7 +95,7 @@ const productSchema = new mongoose.Schema<IProduct>({
             required: true
         }
     ],
-    //added newly
+   
     material: {
         type: String,
         required:true
@@ -94,6 +106,7 @@ const productSchema = new mongoose.Schema<IProduct>({
     },
     typeOfProduct:{
         type:String,
+        required:true
         
     }
     

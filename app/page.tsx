@@ -2,7 +2,6 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
@@ -11,12 +10,12 @@ export default function LandingPage() {
   const categories = [
     {
       name: "Ladies Dresses",
-      img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg", //should be changed to imagekit url
+      img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg", 
       db_name: "women",
     },
     {
       name: "Kids Collection",
-      img: "https://ik.imagekit.io/bufohim2jd/product-image_9vCi-sYAT.jpg",
+      img: "/kids.jpeg",
       db_name: "kids",
     },
     {
@@ -34,11 +33,11 @@ export default function LandingPage() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  useEffect(()=>{
-    if(session?.user.role === "admin"){
-      router.push("/admin")
+  useEffect(() => {
+    if (session?.user.role === "admin") {
+      router.push("/admin");
     }
-  },[session])
+  }, [session]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -198,7 +197,59 @@ export default function LandingPage() {
             >
               Discover Opportunities
             </Link>
-            
+
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 md:mb-8">
+              Partnership and Franchise Opportunities
+            </h2>
+            <p className="text-base md:text-lg text-primary/90 mb-6 md:mb-8 max-w-2xl mx-auto">
+              Join the Vally Fabrics and Fashion family and take your business
+              to the next level. We're dedicated to helping entrepreneurs
+              succeed by offering opportunities to set up franchises and retail
+              our high-quality fabrics and exclusive fashion collections. With
+              our proven business model and comprehensive marketing support,
+              you'll have everything you need to build a successful venture. If
+              you're looking for a rewarding partnership and a chance to grow
+              with us, get in touch to learn more about joining our franchise
+              network.
+            </p>
+
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 md:mb-8">
+              Wedding Consultants / Event Managers
+            </h2>
+            <p className="text-base md:text-lg text-primary/90 mb-6 md:mb-8 max-w-2xl mx-auto">
+              We understand the importance of elegance and perfection for your
+              events. At Vally Fabrics and Fashion, we specialize in customized
+              bridal wear tailored to perfection, stunning party dresses to make
+              your events memorable, and bulk orders for themed events and
+              special occasions. Let us handle your clothing needs while you
+              focus on crafting unforgettable events. Reach out to discuss your
+              requirements.
+            </p>
+
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 md:mb-8">
+              Students & Designers
+            </h2>
+            <p className="text-base md:text-lg text-primary/90 mb-6 md:mb-8 max-w-2xl mx-auto">
+              Are you a fashion or interior design student looking for a
+              platform to grow your skills? We offer:
+            </p>
+
+            <ul className=" max-w-2xl mx-auto mb-6 md:mb-8 pl-0 ">
+              <li className="flex items-start gap-3 text-sm md:text-base text-primary/90 ">
+              Access to our state-of-the-art designing and weaving studio
+              </li>
+              <li className="flex items-start gap-3 text-sm md:text-base text-primary/90">
+              Mentorship programs to enhance your professional journey
+              </li>
+              <li className="flex items-start gap-3 text-sm md:text-base text-primary/90">
+              {`Hands-on experience in retailing your creations throughs \n our sales centers`}
+              </li>
+            </ul>
+
+            <p className="text-base md:text-lg text-primary/90 mb-6 md:mb-8 max-w-2xl mx-auto">
+              Take the next step in your design career with Valley Fabrics and
+              Fashion. Contact us to get started!
+            </p>
           </div>
         </div>
       </section>

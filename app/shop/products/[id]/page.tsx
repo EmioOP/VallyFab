@@ -19,40 +19,37 @@ export default function ProductDetailPage() {
   const [error, setError] = useState("");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-
-  
   const handleBuyNow = () => {
     if (!product) return;
-  
+
     // Replace with your company's WhatsApp number (include country code without + or 00)
-    const phoneNumber = process.env.NEXT_PUBLIC_SHOP_WHATSAPP_NUMBER ;
-    console.log(phoneNumber,typeof phoneNumber)
-    
+    const phoneNumber = process.env.NEXT_PUBLIC_SHOP_WHATSAPP_NUMBER;
+    console.log(phoneNumber, typeof phoneNumber);
+
     // Create message template
     const message = `Hi, I want to buy the following product:
     
 *Product Name:* ${product.name}
 *Vally Id:* ${product.vallyId}
 *Price:* ₹${product.price}
-*Size:* ${selectedSize || 'Not selected'}
-*Color:* ${selectedColor || 'Not selected'}
+*Size:* ${selectedSize || "Not selected"}
+*Color:* ${selectedColor || "Not selected"}
 *Quantity:* ${quantity}
 
 Please confirm availability and proceed with the order.`;
-  
+
     // Encode message for URL
     const encodedMessage = encodeURIComponent(message);
-    
+
     // Create WhatsApp URL
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    console.log(whatsappUrl)
-    
+    console.log(whatsappUrl);
+
     // Open in new tab
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, "_blank");
   };
 
-
-//Fetch Products
+  //Fetch Products
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -73,7 +70,6 @@ Please confirm availability and proceed with the order.`;
 
     if (params.id) fetchProduct();
   }, [params.id]);
-
 
   //Quantity change
   const handleQuantityChange = (type: "increase" | "decrease") => {
@@ -195,7 +191,9 @@ Please confirm availability and proceed with the order.`;
               {/* <span className="text-sm text-gray-500">Product By:{product.brand}</span> */}
             </div>
           </div>
-          <span className="text-sm text-gray-500">Product By:{product.brand}</span>
+          <span className="text-sm text-gray-500">
+            Product By:{product.brand}
+          </span>
 
           <div className="text-2xl font-bold text-primary">
             ₹{product.price}
@@ -210,15 +208,15 @@ Please confirm availability and proceed with the order.`;
 
           {product.colors && (
             <div>
-              <h3 className="font-medium mb-2">Color</h3>
-              <div className="flex gap-2">
+              <h3 className="font-medium mb-2">Colors</h3>
+              <div className="grid grid-cols-3 gap-2">
                 {product.colors.map((color, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedColor(color)}
-                    className={`px-3 py-1 border rounded-md ${
-                      selectedColor === color 
-                        ? "border-rosegold bg-rosegold/10 text-rosegold" 
+                    className={`w-full px-3 py-1 border rounded-md ${
+                      selectedColor === color
+                        ? "border-rosegold bg-rosegold/10 text-rosegold"
                         : "border-gray-300 hover:border-rosegold"
                     }`}
                   >
@@ -276,7 +274,10 @@ Please confirm availability and proceed with the order.`;
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button className="flex-1 bg-rosegold hover:bg-rosegold/90" onClick={handleBuyNow}>
+            <Button
+              className="flex-1 bg-rosegold hover:bg-rosegold/90"
+              onClick={handleBuyNow}
+            >
               <Heart className="mr-2 h-4 w-4" />
               Buy Now - Throgh WhatsApp
             </Button>
@@ -319,21 +320,28 @@ Please confirm availability and proceed with the order.`;
 
         <div className="py-6">
           <div className="prose max-w-none text-gray-600">
-
-
-            <h4 className="text-primary font-medium mb-2">Material:</h4>
-            <p>{product.material || "No Fabric Details Available"}</p>
-
-            <h4 className="text-primary font-medium mb-2">Type:</h4>
-            <p>{product.typeOfProduct || "Type Not Available"}</p>
-
-              {product.fabricSize ? <div>
-                <h4 className="text-primary font-medium mb-2">Fabric Size:</h4>
-            <p>{product.fabricSize || "Fabric Length and Width are not Applicable"}</p>
-              </div>  : "" }
-            
-              <h4 className="text-primary font-medium mb-2">Desciption:</h4>
+            <h4 className="text-primary font-medium mb-1">Material:</h4>
             <p className="text-gray-600">
+              {product.material || "No Fabric Details Available"}
+            </p>
+
+            <h4 className="text-primary font-medium mb-1">Type:</h4>
+            <p className="text-gray-600">
+              {product.typeOfProduct || "Type Not Available"}
+            </p>
+
+            {product.fabricSize && (
+              <div>
+                <h4 className="text-primary font-medium mb-1">Fabric Size:</h4>
+                <p>
+                  {product.fabricSize ||
+                    "Fabric Length and Width are not Applicable"}
+                </p>
+              </div>
+            )}
+
+            <h4 className="text-primary font-medium mb-1">Desciption:</h4>
+            <p className="text-gray-600 ">
               {product.description || "No description available"}
             </p>
 
