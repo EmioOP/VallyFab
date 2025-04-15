@@ -23,10 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Script
+        {/* <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
-        />
+        /> */}
         <Providers>
           <CartProvider>
             <div className="flex min-h-screen flex-col">

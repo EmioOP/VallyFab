@@ -8,9 +8,7 @@ interface NotificationContextType {
   showNotification: (message: string, type: NotificationType) => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(
-  undefined
-);
+const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notification, setNotification] = useState<{
@@ -31,8 +29,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     <NotificationContext.Provider value={{ showNotification }}>
       {children}
       {notification && (
-        <div className="toast toast-bottom toast-end z-[100]">
-          <div className={`alert ${getAlertClass(notification.type)}`}>
+        <div className="fixed bottom-4 right-4 z-50">
+          <div
+            className={`px-4 py-3 rounded-lg shadow-lg text-white animate-slide-in-right ${getNotificationColor(
+              notification.type
+            )}`}
+          >
             <span>{notification.message}</span>
           </div>
         </div>
@@ -41,18 +43,18 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   );
 }
 
-function getAlertClass(type: NotificationType): string {
+function getNotificationColor(type: NotificationType): string {
   switch (type) {
     case "success":
-      return "alert-success";
+      return "bg-green-500";
     case "error":
-      return "alert-error";
+      return "bg-red-500";
     case "warning":
-      return "alert-warning";
+      return "bg-yellow-500";
     case "info":
-      return "alert-info";
+      return "bg-blue-500";
     default:
-      return "alert-info";
+      return "bg-gray-500";
   }
 }
 
