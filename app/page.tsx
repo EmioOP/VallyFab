@@ -10,7 +10,7 @@ export default function LandingPage() {
   const categories = [
     {
       name: "Ladies Dresses",
-      img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg", 
+      img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg",
       db_name: "women",
     },
     {
@@ -25,7 +25,7 @@ export default function LandingPage() {
     },
     {
       name: "Home",
-      img: "https://img.freepik.com/free-photo/home-decorations-interior-turquoise-blanket-wicker-basket-with-vase-flowers-candles_169016-2098.jpg?t=st=1742139732~exp=1742143332~hmac=38bcd340e055fa7d09649a933caa60eb4e217ca0e3396ff1169eaa85b3201d04&w=996",
+      img: "/home-decor.jpeg",
       db_name: "home",
     },
   ];
@@ -181,7 +181,7 @@ export default function LandingPage() {
       </section>
 
       {/* Collaboration CTA */}
-      <section className="bg-accent/10 py-12 md:py-16">
+      {/* <section className="bg-accent/10 py-12 md:py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 md:mb-8">
             Work, Trade & Learn With Us!
@@ -235,14 +235,14 @@ export default function LandingPage() {
             </p>
 
             <ul className=" max-w-2xl mx-auto mb-6 md:mb-8 pl-0 ">
-              <li className="flex items-start gap-3 text-sm md:text-base text-primary/90 ">
-              Access to our state-of-the-art designing and weaving studio
+              <li className="flex items-start gap-3 text-base md:text-lg text-primary/90 ">
+                Access to our state-of-the-art designing and weaving studio
               </li>
-              <li className="flex items-start gap-3 text-sm md:text-base text-primary/90">
-              Mentorship programs to enhance your professional journey
+              <li className="flex items-start gap-3 text-base md:text-lg text-primary/90">
+                Mentorship programs to enhance your professional journey
               </li>
-              <li className="flex items-start gap-3 text-sm md:text-base text-primary/90">
-              {`Hands-on experience in retailing your creations throughs \n our sales centers`}
+              <li className="flex items-start gap-3 text-base md:text-lg text-primary/90">
+                {`Hands-on experience in retailing your creations throughs \n our sales centers`}
               </li>
             </ul>
 
@@ -250,6 +250,82 @@ export default function LandingPage() {
               Take the next step in your design career with Valley Fabrics and
               Fashion. Contact us to get started!
             </p>
+          </div>
+        </div>
+      </section> */}
+
+      <section className="bg-accent/10 py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-justify max-w-4xl mx-auto">
+            {" "}
+            {/* Changed container */}
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 md:mb-8 text-center">
+              Work, Trade & Learn With Us!
+            </h2>
+            <p className="text-base md:text-lg text-primary/90 mb-6 md:mb-8">
+              Looking to showcase your skills and talents? Collaborate with us
+              and turn your expertise into a rewarding experience.
+            </p>
+            <div className="space-y-4 text-center">
+              {" "}
+              {/* Keep button centered */}
+              <Link
+                href="/contact"
+                className="inline-block bg-secondary px-6 py-3 md:px-8 md:py-4 rounded-lg text-white hover:bg-secondary/90 transition-colors duration-300 text-base md:text-lg font-medium"
+              >
+                Discover Opportunities
+              </Link>
+            </div>
+            {/* Subsequent sections */}
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mt-12 mb-6 md:mb-8">
+              Partnership & Franchise Opportunities
+            </h2>
+            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+              Join the Vally Fabrics and Fashion family and take your business
+              to the next level. We're dedicated to helping entrepreneurs
+              succeed by offering opportunities to set up franchises and retail
+              our high-quality fabrics and exclusive fashion collections. With
+              our proven business model and comprehensive marketing support,
+              you'll have everything you need to build a successful venture. If
+              you're looking for a rewarding partnership and a chance to grow
+              with us, get in touch to learn more about joining our franchise
+              network.
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mt-12 mb-6 md:mb-8">
+            Wedding Consultants / Event Managers
+            </h2>
+            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+              We understand the importance of elegance and perfection for your
+              events. At Vally Fabrics and Fashion, we specialize in customized
+              bridal wear tailored to perfection, stunning party dresses to make
+              your events memorable, and bulk orders for themed events and
+              special occasions. Let us handle your clothing needs while you
+              focus on crafting unforgettable events. Reach out to discuss your
+              requirements.
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mt-12 mb-6 md:mb-8">
+              Students & Designers
+            </h2>
+            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+              Are you a fashion or interior design student looking for a
+              platform to grow your skills? We offer:
+            </p>
+            <ul className=" max-w-2xl mx-auto mb-6 md:mb-8 pl-0 ">
+              <p className="flex items-start gap-3 text-base md:text-lg text-primary/90 ">
+              <span>-</span>Access to our state-of-the-art designing and weaving studio
+              </p>
+              <p className="flex items-start gap-3 text-base md:text-lg text-primary/90">
+              <span>-</span>Mentorship programs to enhance your professional journey
+              </p>
+              <p className="flex items-start gap-3 text-base md:text-lg text-primary/90">
+              <span>-</span>Hands-on experience in retailing your creations through our sales centers
+              </p>
+            </ul>
+            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+              Take the next step in your design career with Valley Fabrics and
+              Fashion. Contact us to get started!
+            </p>
+            {/* Other sections maintain the same structure */}
           </div>
         </div>
       </section>

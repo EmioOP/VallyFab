@@ -77,23 +77,43 @@ export async function POST(request: NextRequest) {
         if (!session || session?.user?.role !== 'admin') {
             return NextResponse.json({ error: "Unauthorized Request" }, { status: 401 });
         }
-        console.log("this gives you user details",session.user)
+
         await connectDB();
 
         const body = await request.json();
 
-        // Validate required fields including vallyId and images array
+        // Validate required fields
         if (!body.name || !body.vallyId || !body.price || !body.category || 
-            !body.brand || !body.sizes || !body.images || !body.stock ||!body.colors || !body.material ) {
-            return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+            !body.brand || !body.sizes || !body.image || !body.stock || 
+            !body.material || !body.typeOfProduct) {
+            return NextResponse.json({ error: "All required fields must be provided" }, { status: 400 });
         }
 
-        // Ensure images array has exactly 4 elements
-        if (!Array.isArray(body.images) || body.images.length !== 4) {
-            return NextResponse.json({ error: "Exactly 4 images required" }, { status: 400 });
+        // Validate variants structure and images
+        if (!Array.isArray(body.variants)) {
+            return NextResponse.json({ error: "Invalid variants format" }, { status: 400 });
         }
 
-        // Create product with images array
+        for (const variant of body.variants) {
+            if (!variant.color || !Array.isArray(variant.images)) {
+                return NextResponse.json({ error: "Each variant must have a color and images array" }, { status: 400 });
+            }
+            if (variant.images.length !== 4) {
+                return NextResponse.json({ 
+                    error: `Each variant must have exactly 4 images (${variant.color} has ${variant.images.length})` 
+                }, { status: 400 });
+            }
+        }
+
+        // Process images to include full URL if needed
+        const processedVariants = body.variants.map((variant: any) => ({
+            color: variant.color,
+            images: variant.images.map((img: string) => 
+                img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${img}`
+            )
+        }));
+
+        // Create product
         const product = await Product.create({
             name: body.name,
             vallyId: body.vallyId,
@@ -103,25 +123,27 @@ export async function POST(request: NextRequest) {
             subCategory: body.subCategory,
             brand: body.brand,
             sizes: body.sizes,
-            images: body.images.map((image: string) => 
-                `${process.env.NEXT_PUBLIC_URL_ENDPOINT}${image}`
-            ),
-            material:body.material,
-            colors:body.colors,
-            fabricSize:body.fabricSize || "",
-            typeOfProduct:body.typeOfProduct,
+            variants: processedVariants,
+            image: body.image.startsWith('http') 
+                ? body.image 
+                : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${body.image}`,
+            material: body.material,
+            fabricSize: body.fabricSize || "",
+            typeOfProduct: body.typeOfProduct,
             stock: body.stock
         });
 
         if (!product) {
             return NextResponse.json({ error: "Product creation failed" }, { status: 400 });
         }
-        console.log(product)
 
         return NextResponse.json({ product }, { status: 201 });
 
     } catch (error: any) {
         console.error(error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return NextResponse.json(
+            { error: error.message || "Internal server error" }, 
+            { status: 500 }
+        );
     }
 }

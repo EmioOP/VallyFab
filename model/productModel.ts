@@ -13,26 +13,17 @@ export interface IProduct {
     subCategory: mongoose.Types.ObjectId;
     brand: string;
     sizes: string[];
-    colors: string[];
-    images: string[]; //4images per item
+    variants: string[];
+    image: string; //4images per item
     stock: number;
     material: string;
     fabricSize: string;
-    typeOfProduct:string;
+    typeOfProduct: string;
     createdAt: Date;
     updatedAt: Date;
 }
 
-const productVarientSchema = new mongoose.Schema({
-    color:{
-        type:String,
-        required:true
-    },
-    images:{
-        type:String,
-        required:true
-    }
-})
+
 
 const productSchema = new mongoose.Schema<IProduct>({
     name: {
@@ -75,41 +66,45 @@ const productSchema = new mongoose.Schema<IProduct>({
             type: String,
             required: true,
             enum: {
-                values: ["XS","S", "M", "L", "XL", "XXL","XXXL"],
+                values: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
                 message: "Please select a valid size"
             },
         }
     ],
-    colors: [
+    variants: [
         {
-            type: String,
-            required: true,
-            trim:true,
-            unique:true
+            color: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            images: [
+                {
+                    type: String,
+                    required: true
+                }
+            ]
         }
-
     ],
-    images: [
-        {
-            type: String,
-            required: true
-        }
-    ],
-   
+    image:
+    {
+        type: String,
+        required: true
+    },
     material: {
         type: String,
-        required:true
+        required: true
 
     },
     fabricSize: {
         type: String, //to be changed to legth{} and width{}
     },
-    typeOfProduct:{
-        type:String,
-        required:true
-        
+    typeOfProduct: {
+        type: String,
+        required: true
+
     }
-    
+
 }, { timestamps: true })
 
 const Product = mongoose.models.Product || mongoose.model<IProduct>("Product", productSchema)

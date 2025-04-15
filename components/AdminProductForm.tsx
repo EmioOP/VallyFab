@@ -46,8 +46,7 @@ export default function AdminProductForm() {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingSubCategories, setLoadingSubCategories] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<string[]>(["M"]);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [variants, setVariants] = useState<Array<{ color: string; images: string[] }>>([]);
   const [currentColor, setCurrentColor] = useState("");
 
   const {
@@ -67,20 +66,20 @@ export default function AdminProductForm() {
       subCategory: "",
       brand: "",
       sizes: ["M"],
-      images: [],
+      variants: [],
+      image: "",
       stock: 0,
       material: "",
       fabricSize: "",
-      typeOfProduct:""
-      
+      typeOfProduct: ""
     },
   });
 
   useEffect(() => {
-    setValue("colors", selectedColors);
-  }, [selectedColors, setValue]);
+    setValue("variants", variants);
+  }, [variants, setValue]);
 
-  const addColor = () => {
+  const addColorVariant = () => {
     const colorName = COLOR_OPTIONS.find(
       (c) => c.toLowerCase() === currentColor.trim().toLowerCase()
     );
@@ -90,14 +89,37 @@ export default function AdminProductForm() {
       return;
     }
 
-    if (!selectedColors.includes(colorName)) {
-      setSelectedColors((prev) => [...prev, colorName]);
+    if (!variants.some(v => v.color === colorName)) {
+      setVariants(prev => [...prev, { color: colorName, images: [] }]);
       setCurrentColor("");
     }
   };
 
-  const removeColor = (colorToRemove: string) => {
-    setSelectedColors((prev) => prev.filter((c) => c !== colorToRemove));
+  const removeVariant = (colorToRemove: string) => {
+    setVariants(prev => prev.filter(v => v.color !== colorToRemove));
+  };
+
+  const handleUploadSuccess = (response: IKUploadResponse, color: string) => {
+    setVariants(prev => prev.map(v => {
+      if (v.color === color) {
+        if (v.images.length >= 4) {
+          showNotification("Maximum 4 images per variant", "error");
+          return v;
+        }
+        return { ...v, images: [...v.images, response.filePath] };
+      }
+      return v;
+    }));
+    showNotification("Image uploaded successfully!", "success");
+  };
+
+  const removeImage = (color: string, index: number) => {
+    setVariants(prev => prev.map(v => {
+      if (v.color === color) {
+        return { ...v, images: v.images.filter((_, i) => i !== index) };
+      }
+      return v;
+    }));
   };
 
   useEffect(() => {
@@ -142,23 +164,6 @@ export default function AdminProductForm() {
     }
   }, [watch("category"), showNotification, setValue]);
 
-  const handleUploadSuccess = (response: IKUploadResponse) => {
-    if (uploadedImages.length >= 4) {
-      showNotification("Maximum 4 images allowed", "error");
-      return;
-    }
-    const newImages = [...uploadedImages, response.filePath];
-    setUploadedImages(newImages);
-    setValue("images", newImages);
-    showNotification("Image uploaded successfully!", "success");
-  };
-
-  const removeImage = (index: number) => {
-    const newImages = uploadedImages.filter((_, i) => i !== index);
-    setUploadedImages(newImages);
-    setValue("images", newImages);
-  };
-
   const handleSizeChange = (size: string) => {
     const newSizes = selectedSizes.includes(size)
       ? selectedSizes.filter((s) => s !== size)
@@ -169,10 +174,16 @@ export default function AdminProductForm() {
   };
 
   const onSubmit = async (data: ProductFormData) => {
-    console.log(data)
-    if (selectedColors.length === 0) {
-      showNotification("Please select at least one color", "error");
+    if (variants.length === 0) {
+      showNotification("Please add at least one color variant", "error");
       return;
+    }
+
+    for (const variant of variants) {
+      if (variant.images.length !== 4) {
+        showNotification(`Each color variant needs exactly 4 images (${variant.color} has ${variant.images.length})`, "error");
+        return;
+      }
     }
 
     if (data.sizes.length === 0) {
@@ -180,17 +191,24 @@ export default function AdminProductForm() {
       return;
     }
 
-    if (data.images.length !== 4) {
-      showNotification("Exactly 4 images are required", "error");
+    if (!data.image) {
+      showNotification("Main product image is required", "error");
       return;
     }
 
     try {
-      await apiClient.createProduct(data);
+      await apiClient.createProduct({
+        ...data,
+        variants: variants.map(v => ({
+          color: v.color,
+          images: v.images.map(img => img.split("/").pop() || "")
+        })),
+        image: data.image.split("/").pop() || ""
+      });
       showNotification("Product created successfully!", "success");
       reset();
+      setVariants([]);
       setSelectedSizes(["M"]);
-      setUploadedImages([]);
     } catch (error) {
       showNotification(
         error instanceof Error ? error.message : "Failed to create product",
@@ -207,7 +225,6 @@ export default function AdminProductForm() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Existing fields */}
           <FormInput
             label="Vally ID"
             error={errors.vallyId?.message}
@@ -216,9 +233,7 @@ export default function AdminProductForm() {
             <input
               id="vallyId"
               type="text"
-              className={`input input-bordered w-full border${
-                errors.vallyId ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.vallyId ? "input-error" : ""}`}
               placeholder="Enter Vally ID"
               {...register("vallyId", {
                 required: "Vally ID is required",
@@ -235,9 +250,7 @@ export default function AdminProductForm() {
             <input
               id="name"
               type="text"
-              className={`input input-bordered w-full border ${
-                errors.name ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.name ? "input-error" : ""}`}
               placeholder="Enter product name"
               {...register("name", {
                 required: "Name is required",
@@ -253,9 +266,7 @@ export default function AdminProductForm() {
               step="0.01"
               min="0.01"
               max="10000"
-              className={`input input-bordered w-full border ${
-                errors.price ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.price ? "input-error" : ""}`}
               placeholder="0.00"
               {...register("price", {
                 required: "Price is required",
@@ -273,9 +284,7 @@ export default function AdminProductForm() {
           >
             <select
               id="category"
-              className={`select select-bordered w-full border ${
-                errors.category ? "select-error" : ""
-              }`}
+              className={`select select-bordered w-full ${errors.category ? "select-error" : ""}`}
               disabled={loadingCategories || categories.length === 0}
               {...register("category", { required: "Category is required" })}
             >
@@ -306,17 +315,9 @@ export default function AdminProductForm() {
           >
             <select
               id="subCategory"
-              className={`select select-bordered w-full border ${
-                errors.subCategory ? "select-error" : ""
-              }`}
-              disabled={
-                !watch("category") ||
-                loadingSubCategories ||
-                subCategories.length === 0
-              }
-              {...register("subCategory", {
-                required: "Subcategory is required",
-              })}
+              className={`select select-bordered w-full ${errors.subCategory ? "select-error" : ""}`}
+              disabled={!watch("category") || loadingSubCategories || subCategories.length === 0}
+              {...register("subCategory", { required: "Subcategory is required" })}
             >
               {!watch("category") ? (
                 <option disabled>Select a category first</option>
@@ -344,9 +345,7 @@ export default function AdminProductForm() {
             <input
               id="brand"
               type="text"
-              className={`input input-bordered w-full border ${
-                errors.brand ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.brand ? "input-error" : ""}`}
               placeholder="Enter brand name"
               autoComplete="organization"
               {...register("brand", {
@@ -361,9 +360,7 @@ export default function AdminProductForm() {
               id="stock"
               type="number"
               min="0"
-              className={`input input-bordered w-full ${
-                errors.stock ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.stock ? "input-error" : ""}`}
               placeholder="Enter stock quantity"
               {...register("stock", {
                 required: "Stock is required",
@@ -373,7 +370,6 @@ export default function AdminProductForm() {
             />
           </FormInput>
 
-          {/* New Material Field */}
           <FormInput
             label="Material"
             error={errors.material?.message}
@@ -382,17 +378,15 @@ export default function AdminProductForm() {
             <input
               id="material"
               type="text"
-              className={`input input-bordered w-full border ${
-                errors.material ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.material ? "input-error" : ""}`}
               placeholder="Enter material (e.g., Cotton)"
               {...register("material", {
+                required: "Material is required",
                 maxLength: { value: 100, message: "Maximum 100 characters" },
               })}
             />
           </FormInput>
 
-          {/* New Fabric Size Field */}
           <FormInput
             label="Fabric Size"
             error={errors.fabricSize?.message}
@@ -401,9 +395,7 @@ export default function AdminProductForm() {
             <input
               id="fabricSize"
               type="text"
-              className={`input input-bordered w-full border ${
-                errors.fabricSize ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.fabricSize ? "input-error" : ""}`}
               placeholder="Enter fabric dimensions (e.g., 150cm x 200cm)"
               {...register("fabricSize", {
                 maxLength: { value: 50, message: "Maximum 50 characters" },
@@ -419,11 +411,10 @@ export default function AdminProductForm() {
             <input
               id="typeOfProduct"
               type="text"
-              className={`input input-bordered w-full border ${
-                errors.fabricSize ? "input-error" : ""
-              }`}
+              className={`input input-bordered w-full ${errors.typeOfProduct ? "input-error" : ""}`}
               placeholder="Enter The Type of Product"
               {...register("typeOfProduct", {
+                required: "Product type is required",
                 maxLength: { value: 50, message: "Maximum 50 characters" },
               })}
             />
@@ -445,7 +436,7 @@ export default function AdminProductForm() {
                     value={size}
                     checked={selectedSizes.includes(size)}
                     onChange={() => handleSizeChange(size)}
-                    className="checkbox checkbox-primary "
+                    className="checkbox checkbox-primary"
                   />
                   <span className="font-medium">{size}</span>
                 </label>
@@ -454,27 +445,27 @@ export default function AdminProductForm() {
           </FormInput>
 
           <FormInput
-            label="Available Colors"
-            error={errors.colors?.message}
-            id="colors"
+            label="Color Variants"
+            error={errors.variants?.message}
+            id="variants"
           >
-            <div className="space-y-2">
+            <div className="space-y-4">
               <div className="flex gap-2">
                 <input
                   type="text"
                   list="colors-list"
                   value={currentColor}
                   onChange={(e) => setCurrentColor(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && addColor()}
+                  onKeyPress={(e) => e.key === "Enter" && addColorVariant()}
                   placeholder="Select or type a color"
                   className="input input-bordered w-full border"
                 />
                 <button
                   type="button"
-                  onClick={addColor}
-                  className="btn bg-secondary rounded border "
+                  onClick={addColorVariant}
+                  className="btn bg-secondary rounded border"
                 >
-                  Add Color
+                  Add Variant
                 </button>
               </div>
 
@@ -484,31 +475,76 @@ export default function AdminProductForm() {
                 ))}
               </datalist>
 
-              <div className="flex flex-wrap gap-2">
-                {selectedColors.map((color) => (
-                  <div
-                    key={color}
-                    className="badge badge-outline gap-1 items-center pl-2"
-                  >
-                    <div
-                      className="w-3 h-3 rounded-full border border-gray-300"
-                      style={{ backgroundColor: color }}
-                    />
-                    {color}
+              {variants.map((variant) => (
+                <div key={variant.color} className="border p-4 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-4 h-4 rounded-full border"
+                        style={{ backgroundColor: variant.color }}
+                      />
+                      <span className="font-medium">{variant.color}</span>
+                    </div>
                     <button
                       type="button"
-                      onClick={() => removeColor(color)}
-                      className="ml-1"
+                      onClick={() => removeVariant(variant.color)}
+                      className="btn btn-xs btn-error"
                     >
-                      ×
+                      Remove
                     </button>
                   </div>
-                ))}
-              </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2">
+                      <FileUpload 
+                        onSuccess={(res) => handleUploadSuccess(res, variant.color)}
+                        disabled={variant.images.length >= 4}
+                      />
+                      <span className="text-sm text-gray-500">
+                        {4 - variant.images.length} images remaining
+                      </span>
+                    </div>
+
+                    <div className="col-span-2 flex flex-wrap gap-2">
+                      {variant.images.map((img, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={`${baseUrl}/${img.split("/").pop()}`}
+                            alt={`${variant.color} variant ${index + 1}`}
+                            className="w-16 h-16 object-cover rounded border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(variant.color, index)}
+                            className="btn btn-circle btn-xs absolute -top-2 -right-2"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </FormInput>
 
-
+          <FormInput
+            label="Main Product Image"
+            error={errors.image?.message}
+            id="image"
+          >
+            <FileUpload 
+              onSuccess={(res) => setValue("image", res.filePath)}
+            />
+            {watch("image") && (
+              <img
+                src={`${baseUrl}/${watch("image").split("/").pop()}`}
+                alt="Main product preview"
+                className="mt-2 w-32 h-32 object-cover rounded border"
+              />
+            )}
+          </FormInput>
         </div>
 
         <FormInput
@@ -518,45 +554,13 @@ export default function AdminProductForm() {
         >
           <textarea
             id="description"
-            className={`textarea textarea-bordered w-full h-32 border${
-              errors.description ? "textarea-error" : ""
-            }`}
+            className={`textarea textarea-bordered w-full h-32 ${errors.description ? "textarea-error" : ""}`}
             placeholder="Enter product description"
             {...register("description", {
               required: "Description is required",
               maxLength: { value: 500, message: "Maximum 500 characters" },
             })}
           />
-        </FormInput>
-
-        <FormInput
-          label="Product Images (4 required)"
-          error={errors.images?.message}
-          id="images"
-        >
-          <div className="space-y-4">
-            {uploadedImages.length < 4 && (
-              <FileUpload onSuccess={handleUploadSuccess} />
-            )}
-            <div className="flex flex-wrap gap-4 mt-4">
-              {uploadedImages.map((img, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={`${baseUrl}/${img.split("/").pop()}`}
-                    alt={`Preview ${index + 1}`}
-                    className="w-32 h-32 object-cover rounded-lg border"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="btn btn-circle btn-xs absolute -top-2 -right-2"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
         </FormInput>
 
         <button

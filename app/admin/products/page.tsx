@@ -41,7 +41,7 @@ export default function ProductsAdminPage() {
                 {/* Image Section */}
                 <div className="w-full md:w-1/3 h-32 md:h-auto overflow-hidden">
                   <img
-                    src={product.images[0]}
+                    src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover rounded"
                   />

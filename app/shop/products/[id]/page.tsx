@@ -1,12 +1,60 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Heart, Share2, Star, ShoppingCart } from "lucide-react";
 import AddToCartButton from "@/components/add-to-cart-button";
 import { IProduct } from "@/model/productModel";
+// import { DotButton, useDotButton } from './EmblaCarouselDotButton';
+
+function useDotButton(emblaApi: any) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const onDotButtonClick = useCallback(
+    (index: number) => {
+      if (!emblaApi) return;
+      emblaApi.scrollTo(index);
+    },
+    [emblaApi]
+  );
+
+  const onInit = useCallback((emblaApi: any) => {
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, []);
+
+  const onSelect = useCallback((emblaApi: any) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onInit(emblaApi);
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onInit);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onInit, onSelect]);
+
+  return {
+    selectedIndex,
+    scrollSnaps,
+    onDotButtonClick,
+  };
+}
+
+function DotButton(props: any) {
+  const { children, ...restProps } = props;
+  return (
+    <button type="button" {...restProps}>
+      {children}
+    </button>
+  );
+}
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -15,41 +63,37 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [error, setError] = useState("");
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // Embla Carousel setup
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
+    containScroll: "keepSnaps",
+    dragFree: true,
+  });
+  const { selectedIndex, scrollSnaps, onDotButtonClick } =
+    useDotButton(emblaApi);
 
   const handleBuyNow = () => {
     if (!product) return;
-
-    // Replace with your company's WhatsApp number (include country code without + or 00)
     const phoneNumber = process.env.NEXT_PUBLIC_SHOP_WHATSAPP_NUMBER;
-    console.log(phoneNumber, typeof phoneNumber);
-
-    // Create message template
     const message = `Hi, I want to buy the following product:
     
 *Product Name:* ${product.name}
 *Vally Id:* ${product.vallyId}
 *Price:* ₹${product.price}
 *Size:* ${selectedSize || "Not selected"}
-*Color:* ${selectedColor || "Not selected"}
+*Color:* ${product.variants[selectedVariantIndex].color}
 *Quantity:* ${quantity}
 
 Please confirm availability and proceed with the order.`;
-
-    // Encode message for URL
     const encodedMessage = encodeURIComponent(message);
-
-    // Create WhatsApp URL
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    console.log(whatsappUrl);
-
-    // Open in new tab
     window.open(whatsappUrl, "_blank");
   };
 
-  //Fetch Products
+  // Fetch Products
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -57,7 +101,6 @@ Please confirm availability and proceed with the order.`;
         const response = await fetch(`/api/products/${params.id}`);
         if (!response.ok) throw new Error("Product not found");
         const data = await response.json();
-
         setProduct(data.product);
       } catch (error) {
         setError(
@@ -71,28 +114,33 @@ Please confirm availability and proceed with the order.`;
     if (params.id) fetchProduct();
   }, [params.id]);
 
-  //Quantity change
+  // Update thumbnails when variant changes
+  useEffect(() => {
+    if (emblaApi && emblaThumbsApi) {
+      emblaApi.reInit();
+      emblaThumbsApi.reInit();
+      emblaApi.scrollTo(0);
+    }
+  }, [selectedVariantIndex, emblaApi, emblaThumbsApi]);
+
   const handleQuantityChange = (type: "increase" | "decrease") => {
     setQuantity((prev) =>
       type === "increase" ? prev + 1 : Math.max(1, prev - 1)
     );
   };
 
-  //Add to cart
   const handleAddToCart = async () => {
     if (!product) return;
-
     try {
       const response = await fetch(`/api/cart/update/${product._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           quantity,
-          color: selectedColor,
+          color: product.variants[selectedVariantIndex].color,
           size: selectedSize,
         }),
       });
-
       if (!response.ok) throw new Error("Failed to add to cart");
       alert(`Added ${quantity} ${product.name} to cart`);
     } catch (err) {
@@ -122,7 +170,6 @@ Please confirm availability and proceed with the order.`;
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb Navigation */}
       <div className="mb-4">
         <nav className="flex text-sm text-gray-500">
           <Link href="/" className="hover:text-rosegold">
@@ -139,93 +186,91 @@ Please confirm availability and proceed with the order.`;
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
         {/* Product Images */}
-        <div className="space-y-4">
-          <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
-            <Image
-              src={product.images[selectedImageIndex] || "/placeholder.svg"}
-              alt={product.name}
-              width={600}
-              height={600}
-              className="h-full w-full object-cover"
-              priority
-            />
+        <div className="space-y-8">
+          {/* Main Carousel */}
+          <div className="embla overflow-hidden rounded-lg" ref={emblaRef}>
+            <div className="embla__container">
+              {product.variants[selectedVariantIndex].images.map(
+                (image, index) => (
+                  <div className="embla__slide aspect-square" key={index}>
+                    <Image
+                      src={image || "/placeholder.svg"}
+                      alt={product.name}
+                      width={800}
+                      height={800}
+                      className="h-full w-full object-cover"
+                      priority
+                    />
+                  </div>
+                )
+              )}
+            </div>
           </div>
-          <div className="grid grid-cols-4 gap-2">
-            {product.images.map((image, index) => (
-              <div
-                key={index}
-                onClick={() => setSelectedImageIndex(index)}
-                className={`aspect-square overflow-hidden rounded-md bg-gray-100 cursor-pointer border-2 ${
-                  selectedImageIndex === index
+
+          {/* Thumbnail Carousel */}
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {product.variants.map((variant, index) => (
+              <button
+                key={variant.color}
+                onClick={() => {
+                  setSelectedVariantIndex(index);
+                  emblaApi?.scrollTo(0); // Reset carousel to first image when variant changes
+                }}
+                className={`flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden ${
+                  selectedVariantIndex === index
                     ? "border-rosegold"
-                    : "border-transparent"
+                    : "border-gray-200"
                 }`}
               >
                 <Image
-                  src={image || "/placeholder.svg"}
-                  alt={`${product.name} - View ${index + 1}`}
-                  width={150}
-                  height={150}
+                  src={variant.images[0] || "/placeholder.svg"}
+                  alt={variant.color}
+                  width={100}
+                  height={100}
                   className="h-full w-full object-cover"
                 />
-              </div>
+              </button>
             ))}
           </div>
-        </div>
+
+          
+</div>
 
         {/* Product Info */}
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-primary">{product.name}</h1>
-            <div className="mt-2 flex items-center gap-2">
-              <div className="flex">
-                {/* {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${
-                      i < 4 ? "fill-rosegold text-rosegold" : "text-gray-300"
-                    }`}
-                  />
-                ))} */}
-              </div>
-              {/* <span className="text-sm text-gray-500">Product By:{product.brand}</span> */}
-            </div>
+            <span className="text-sm text-gray-500">
+              Product By: {product.brand}
+            </span>
           </div>
-          <span className="text-sm text-gray-500">
-            Product By:{product.brand}
-          </span>
 
           <div className="text-2xl font-bold text-primary">
             ₹{product.price}
           </div>
 
-          {/* <div>
-            <h3 className="font-medium mb-2">Description</h3>
-            <p className="text-gray-600">
-              {product.description || "No description available"}
-            </p>
-          </div> */}
-
-          {product.colors && (
-            <div>
-              <h3 className="font-medium mb-2">Colors</h3>
-              <div className="grid grid-cols-3 gap-2">
-                {product.colors.map((color, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedColor(color)}
-                    className={`w-full px-3 py-1 border rounded-md ${
-                      selectedColor === color
-                        ? "border-rosegold bg-rosegold/10 text-rosegold"
-                        : "border-gray-300 hover:border-rosegold"
-                    }`}
-                  >
-                    {color}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+{/* Color Variants */}
+<div className="flex items-center gap-2">
+    <span className="font-medium">Color:</span>
+    <div className="flex gap-2">
+      {product.variants.map((variant, index) => (
+        <button
+          key={variant.color}
+          onClick={() => {
+            setSelectedVariantIndex(index);
+            emblaApi?.scrollTo(0);
+          }}
+          className={`w-8 h-8 rounded-full border-2 ${
+            selectedVariantIndex === index
+              ? 'border-rosegold'
+              : 'border-gray-300'
+          }`}
+          style={{ backgroundColor: variant.color }}
+          title={variant.color}
+        />
+      ))}
+    </div>
+  </div>
 
           {product.sizes && (
             <div>
@@ -279,7 +324,7 @@ Please confirm availability and proceed with the order.`;
               onClick={handleBuyNow}
             >
               <Heart className="mr-2 h-4 w-4" />
-              Buy Now - Throgh WhatsApp
+              Buy Now - Through WhatsApp
             </Button>
 
             <Button
@@ -309,12 +354,6 @@ Please confirm availability and proceed with the order.`;
             <button className="px-4 py-2 font-medium text-rosegold border-b-2 border-rosegold">
               Product Details
             </button>
-            {/* <button className="px-4 py-2 font-medium text-gray-500 hover:text-rosegold">
-              Reviews
-            </button>
-            <button className="px-4 py-2 font-medium text-gray-500 hover:text-rosegold">
-              Shipping & Returns
-            </button> */}
           </div>
         </div>
 
@@ -340,22 +379,15 @@ Please confirm availability and proceed with the order.`;
               </div>
             )}
 
-            <h4 className="text-primary font-medium mb-1">Desciption:</h4>
+            <h4 className="text-primary font-medium mb-1">Description:</h4>
             <p className="text-gray-600 ">
               {product.description || "No description available"}
             </p>
-
-            {/* <h4 className="text-primary font-medium mt-4 mb-2">
-              Care Instructions:
-            </h4> */}
-            {/* <ul className="list-disc pl-5 space-y-1">
-              {product.careInstructions?.map((instruction, index) => (
-                <li key={index}>{instruction}</li>
-              )) || <li>Machine wash cold, tumble dry low</li>}
-            </ul> */}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+// Embla Carousel Dot Button Component

@@ -25,6 +25,8 @@ export default function Login() {
       redirect: false,
     });
 
+    showNotification("Login successful!", "success");
+
 
     if (result?.error) {
       showNotification(result.error, "error");

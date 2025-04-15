@@ -29,7 +29,7 @@ export default function ProductsGrid() {
     maxPrice: "",
     selectedCategories: [] as string[],
     selectedSizes: [] as string[],
-    sort: "featured",
+    sort: "newest",
   });
   const limit = 9;
 
@@ -283,7 +283,7 @@ export default function ProductsGrid() {
                     _id={product._id}
                     name={product.name}
                     price={product.price}
-                    image={product.images[0]}
+                    image={`${product.image}?tr=w-667,h-1000`}
                     category={product.category.name}
                     sizes={product.sizes}
                   />
