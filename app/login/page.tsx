@@ -9,7 +9,7 @@ import Input from "@/components/ui/formInput";
 import { useSession } from "next-auth/react"
 
 export default function Login() {
-  const { data: session, status } = useSession()
+  // const { data: session, status } = useSession()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
