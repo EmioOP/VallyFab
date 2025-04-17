@@ -8,7 +8,10 @@ export type CartItem = {
   id: string
   name: string
   price: number
+  size:string
+  vallyId:string
   image: string
+  color:string
   quantity: number
 }
 

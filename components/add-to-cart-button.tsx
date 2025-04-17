@@ -14,8 +14,19 @@ export default function AddToCartButton({ product, className }: AddToCartButtonP
   const { addItem } = useCart()
   const { toast } = useToast()
 
+  console.log(product)
+
   const handleAddToCart = () => {
-    addItem(product)
+    addItem({
+      id:product.id,
+      name:product.name,
+      vallyId:product.vallyId,
+      price:product.price,
+      size:product.size,
+      image:product.image,
+      color:product.color,
+      quantity:product.quantity
+    })
     toast({
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`,

@@ -58,7 +58,7 @@ function DotButton(props: any) {
 
 export default function ProductDetailPage() {
   const params = useParams();
-  const router = useRouter();
+  // const router = useRouter();
   const [product, setProduct] = useState<IProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -336,6 +336,22 @@ Please confirm availability and proceed with the order.`;
               <Heart className="mr-2 h-4 w-4" />
               Buy Now - Through WhatsApp
             </Button>
+
+            <AddToCartButton
+              product={{
+                id:product._id,
+                name:product.name,
+                vallyId:product.vallyId,
+                price:product.price,
+                size:selectedSize,
+                image:product.image,
+                color:product.variants[selectedVariantIndex].color || "Colour not selected",
+                quantity:1
+              }}
+              className={
+                "flex-1 border-rosegold text-rosegold hover:bg-rosegold/10"
+              }
+            />
 
             <Button
               onClick={handleAddToCart}
