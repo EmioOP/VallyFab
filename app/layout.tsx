@@ -12,7 +12,7 @@ import { Analytics } from "@vercel/analytics/next";
 const inter = Poppins({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
-  title: "Vally - Fashion & Fabrics",
+  title: "Vally - Fabrics & Fashion  ",
   description: "Premium fashion and fabrics for your unique style",
 };
 
