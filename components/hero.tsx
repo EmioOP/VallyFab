@@ -37,9 +37,9 @@ export default function Hero() {
               <Button onClick={handleShop} size="lg" className="bg-rosegold hover:bg-rosegold/90">
                 Shop Now
               </Button>
-              <Button size="lg" variant="outline" className="border-rosegold text-rosegold hover:bg-rosegold/10">
+              {/* <Button size="lg" variant="outline" className="border-rosegold text-rosegold hover:bg-rosegold/10">
                 Explore Collections
-              </Button>
+              </Button> */}
             </div>
           </div>
           <div className="relative h-[400px] md:h-[500px] lg:h-[600px] w-full rounded-lg overflow-hidden">

@@ -82,6 +82,7 @@ export default function Header() {
                 <Image
                   src="/logo.png"
                   alt="Vally Fabrics Logo"
+                  
                   fill
                   className="object-contain object-left"
                   priority
