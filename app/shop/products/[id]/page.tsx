@@ -348,19 +348,21 @@ Please confirm availability and proceed with the order.`;
                 color:product.variants[selectedVariantIndex].color || "Colour not selected",
                 quantity:1
               }}
+              varient={"outline"}
               className={
-                "flex-1 border-rosegold text-rosegold hover:bg-rosegold/10"
+                "flex-1  border-rosegold  text-rosegold hover:bg-rosegold/10"
               }
+              
             />
 
-            <Button
+            {/* <Button
               onClick={handleAddToCart}
               variant="outline"
               className="flex-1 border-rosegold text-rosegold hover:bg-rosegold/10"
             >
               <ShoppingCart className="mr-2 h-4 w-4" />
               Add to Cart
-            </Button>
+            </Button> */}
           </div>
 
           <div className="pt-4 border-t flex items-center justify-between text-sm text-gray-500">

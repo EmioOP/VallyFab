@@ -7,10 +7,11 @@ import { useToast } from "@/hooks/use-toast"
 
 interface AddToCartButtonProps {
   product: Omit<CartItem, "quantity"> & { quantity: number }
+  varient?:string
   className?: string
 }
 
-export default function AddToCartButton({ product, className }: AddToCartButtonProps) {
+export default function AddToCartButton({ product,varient, className="flex-1 border-rosegold text-rosegold hover:bg-rosegold/10"}: AddToCartButtonProps) {
   const { addItem } = useCart()
   const { toast } = useToast()
 
@@ -18,6 +19,9 @@ export default function AddToCartButton({ product, className }: AddToCartButtonP
 
   const handleAddToCart = () => {
     addItem({
+
+
+
       id:product.id,
       name:product.name,
       vallyId:product.vallyId,
@@ -34,7 +38,7 @@ export default function AddToCartButton({ product, className }: AddToCartButtonP
   }
 
   return (
-    <Button onClick={handleAddToCart} className={className}>
+    <Button onClick={handleAddToCart} variant={varient} className={className}>
       <ShoppingBag className="mr-2 h-4 w-4" />
       Add to Cart
     </Button>
