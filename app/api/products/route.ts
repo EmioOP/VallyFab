@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
         // Count total products matching the filters
         const total = await Product.countDocuments(filter);
 
+
         return NextResponse.json({ products, total }, { status: 200 });
 
     } catch (error) {

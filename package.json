@@ -41,6 +41,7 @@
     "@tinymce/tinymce-react": "^6.0.0",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.7",
+    "@vercel/analytics": "^1.5.0",
     "autoprefixer": "^10.4.20",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",

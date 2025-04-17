@@ -22,15 +22,15 @@ export async function fileDelete(fileId : any){
     try {
         
         //check if file id is a single string or array
-
-        const fileDeleted = imagekit.deleteFile(fileId,(error,result)=>{
-            if(error) console.log(error);
+        console.log(fileId)
+        const fileDeleted = await imagekit.deleteFile(fileId,(error,result)=>{
+            if(error)  return NextResponse.json({error:"Imagekit file delete error"},{status:500})
             else console.log(result);
         })
 
         console.log(fileDeleted)
 
-        return NextResponse.json(fileDeleted)
+        return NextResponse.json("Image deleted")
 
     } catch (error) {
         console.log("Imagekit file delete error",error)

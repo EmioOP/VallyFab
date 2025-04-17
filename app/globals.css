@@ -100,3 +100,21 @@
   min-width: 0;
   position: relative;
 }
+
+.embla__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.embla__dot {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  margin: 0 0.25rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.embla__dot:hover {
+  transform: scale(1.2);
+}

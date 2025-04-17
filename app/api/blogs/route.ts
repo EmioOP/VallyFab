@@ -14,6 +14,13 @@ export async function POST(request:NextRequest){
 
         const {title,slug,content,author,category,excert,image} = await request.json()
 
+        console.log(image)
+
+        const imageDetails = {
+          url : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}${image.url}`,
+          fileId: image.fileId
+        }
+
         console.log(title,slug,content)
          
         await connectDB()
@@ -25,7 +32,7 @@ export async function POST(request:NextRequest){
             author:author || "Vally",
             category: category || "Fashion",
             excert,
-            image:`${process.env.NEXT_PUBLIC_URL_ENDPOINT}${image}`
+            image:imageDetails
 
         })
 
@@ -48,7 +55,6 @@ export async function GET(request: NextRequest) {
   
       const posts = await Blog.find().sort({ createdAt: -1 });
 
-      console.log(posts)
   
       return NextResponse.json({ posts }, { status: 200 });
     } catch (error) {

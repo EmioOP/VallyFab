@@ -15,7 +15,7 @@ export default function CartPage() {
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="text-3xl font-bold text-primary mb-4">Your Cart is Empty</h1>
         <p className="text-gray-600 mb-8">Looks like you haven't added anything to your cart yet.</p>
-        <Link href="/products">
+        <Link href="/ahop/products">
           <Button className="bg-rosegold hover:bg-rosegold/90">Continue Shopping</Button>
         </Link>
       </div>

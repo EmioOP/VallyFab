@@ -4,6 +4,7 @@ import React from "react";
 import { ImageKitProvider } from "imagekitio-next";
 import { SessionProvider } from "next-auth/react";
 import { NotificationProvider } from "./Notification";
+import { CartProvider } from "@/components/cart-provider";
 
 const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
 const publicKey = process.env.NEXT_PUBLIC_PUBLIC_KEY;
@@ -31,6 +32,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
        <NotificationProvider>
+        <CartProvider>
       <ImageKitProvider
         urlEndpoint={urlEndpoint}
         publicKey={publicKey}
@@ -38,6 +40,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       >
         {children}
       </ImageKitProvider>
+      </CartProvider>
       </NotificationProvider>
     </SessionProvider>
   );

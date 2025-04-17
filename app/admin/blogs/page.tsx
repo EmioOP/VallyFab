@@ -98,14 +98,14 @@ export default function AdminBlogPage() {
           >
             <div className="aspect-[4/3] overflow-hidden relative">
               <Image
-                src={post.image}
+                src={post.image.url}
                 alt={post.title}
                 width={800}
                 height={600}
                 className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
               />
               <div className="absolute top-2 right-2 flex gap-2">
-                <Link href={`/admin/blogs/edit/${post._id}`}>
+                <Link href={`/admin/blogs/update/${post._id}`}>
                   <Button 
                     variant="outline" 
                     size="sm"

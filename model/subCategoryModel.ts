@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import './categoryModel';
 
 export interface ISubCategory {
     name:string;

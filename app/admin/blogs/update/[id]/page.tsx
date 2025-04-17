@@ -1,6 +1,6 @@
 'use client';
 import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect,use } from "react";
 import dynamic from "next/dynamic";
 import { IKUpload } from "imagekitio-next";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
@@ -19,17 +19,21 @@ interface BlogFormData {
   excert: string;
   author: string;
   category: string;
-  image?: any;
+  image?: {
+    url: string;
+    fileId: string;
+  };
 }
 
-export default function BlogEditor() {
+export default function BlogEditor({ params }: { params:Promise<{ id: string }> }) {
   const router = useRouter();
   const { 
     register, 
     handleSubmit, 
     setValue, 
     watch, 
-    formState: { errors, isSubmitting } 
+    formState: { errors, isSubmitting },
+    reset
   } = useForm<BlogFormData>({
     defaultValues: {
       author: "Vally",
@@ -42,6 +46,34 @@ export default function BlogEditor() {
   const [imageUploading, setImageUploading] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSlugManual, setIsSlugManual] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [initialImage, setInitialImage] = useState<{ url: string; fileId: string } | null>(null);
+  
+  const resolvedParams = use(params) 
+  const {id} = resolvedParams
+  // Fetch blog data
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const response = await fetch(`/api/blogs/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch blog');
+        const data = await response.json();
+        
+        reset({
+          ...data,
+          image: data.image || undefined
+        });
+        
+        if (data.image) setInitialImage(data.image);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching blog:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [id, reset]);
 
   // Auto-generate slug from title
   useEffect(() => {
@@ -59,8 +91,10 @@ export default function BlogEditor() {
   }, [watch, setValue, isSlugManual]);
 
   const handleImageSuccess = (response: IKUploadResponse) => {
-    setValue("image", {url:response.filePath,fileId:response.fileId});
     console.log(response)
+    setValue("image", 
+      { url: `${process.env.NEXT_PUBLIC_URL_ENDPOINT}response.filePath`,
+       fileId: response.fileId });
     setImageUploading(false);
     setImageError(null);
   };
@@ -72,24 +106,37 @@ export default function BlogEditor() {
 
   const onSubmit = async (data: BlogFormData) => {
     try {
-      const response = await fetch("/api/blogs", {
-        method: "POST",
+      console.log(data.image)
+      const response = await fetch(`/api/blogs/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          ...data,
+          // Preserve existing image if not changed
+          image: data.image || initialImage
+        })
       });
       
-      if (!response.ok) throw new Error("Failed to create post");
+      if (!response.ok) throw new Error("Failed to update post");
       router.push("/admin/blogs");
     } catch (error) {
-      console.error("Submission error:", error);
-      alert("Error creating post. Please check console for details.");
+      console.error("Update error:", error);
+      alert("Error updating post. Please check console for details.");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <h1 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">
-        Create New Blog Post
+        Edit Blog Post
       </h1>
       
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -198,6 +245,17 @@ export default function BlogEditor() {
             Featured Image
           </label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 dark:border-gray-600">
+            {watch("image")?.url && (
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Current Image:</p>
+                <img 
+                  src={watch("image").url}
+                  alt="Current featured" 
+                  className="max-w-xs h-auto rounded-lg border border-gray-200 dark:border-gray-600"
+                />
+              </div>
+            )}
+            
             <IKUpload
               fileName="blog-image.jpg"
               onError={handleImageError}
@@ -216,6 +274,7 @@ export default function BlogEditor() {
               }}
               className="w-full px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 dark:file:bg-gray-600 dark:file:text-gray-100 dark:text-gray-300 dark:border-gray-600"
             />
+            
             {imageUploading && (
               <div className="flex items-center gap-2 mt-4 text-blue-500">
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -223,15 +282,6 @@ export default function BlogEditor() {
               </div>
             )}
             {imageError && <p className="text-red-500 text-sm mt-2">{imageError}</p>}
-            {watch("image") && (
-              <div className="mt-4">
-                <img 
-                  src={watch("image")} 
-                  alt="Preview" 
-                  className="max-w-xs h-auto rounded-lg border border-gray-200 dark:border-gray-600"
-                />
-              </div>
-            )}
           </div>
         </div>
 
@@ -280,6 +330,7 @@ export default function BlogEditor() {
               }
             }}
             onEditorChange={(content) => setValue("content", content)}
+            value={watch("content")}
           />
           {errors.content && <p className="text-red-500 text-sm mt-1">Content is required</p>}
         </div>
@@ -294,9 +345,9 @@ export default function BlogEditor() {
           {isSubmitting ? (
             <div className="flex items-center justify-center">
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Publishing...
+              Updating...
             </div>
-          ) : "Publish Post"}
+          ) : "Update Post"}
         </button>
       </form>
     </div>

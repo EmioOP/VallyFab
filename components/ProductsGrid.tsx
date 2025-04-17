@@ -46,6 +46,7 @@ export default function ProductsGrid() {
             c.name.toLowerCase() === categoryParam.toLowerCase()
           );
           if (foundCategory) {
+            
             handleFilterChange("selectedCategories", [foundCategory._id]);
           }
         }

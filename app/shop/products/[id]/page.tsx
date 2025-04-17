@@ -207,6 +207,18 @@ Please confirm availability and proceed with the order.`;
             </div>
           </div>
 
+          <div className="embla__dots mt-4 flex justify-center gap-2">
+            {scrollSnaps.map((_, index) => (
+              <DotButton
+                key={index}
+                onClick={() => onDotButtonClick(index)}
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  index === selectedIndex ? "bg-gray-500" : "bg-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+
           {/* Thumbnail Carousel */}
           <div className="flex gap-4 overflow-x-auto pb-2">
             {product.variants.map((variant, index) => (
@@ -232,9 +244,7 @@ Please confirm availability and proceed with the order.`;
               </button>
             ))}
           </div>
-
-          
-</div>
+        </div>
 
         {/* Product Info */}
         <div className="space-y-6">
@@ -249,28 +259,28 @@ Please confirm availability and proceed with the order.`;
             ₹{product.price}
           </div>
 
-{/* Color Variants */}
-<div className="flex items-center gap-2">
-    <span className="font-medium">Color:</span>
-    <div className="flex gap-2">
-      {product.variants.map((variant, index) => (
-        <button
-          key={variant.color}
-          onClick={() => {
-            setSelectedVariantIndex(index);
-            emblaApi?.scrollTo(0);
-          }}
-          className={`w-8 h-8 rounded-full border-2 ${
-            selectedVariantIndex === index
-              ? 'border-rosegold'
-              : 'border-gray-300'
-          }`}
-          style={{ backgroundColor: variant.color }}
-          title={variant.color}
-        />
-      ))}
-    </div>
-  </div>
+          {/* Color Variants */}
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Color:</span>
+            <div className="flex gap-2">
+              {product.variants.map((variant, index) => (
+                <button
+                  key={variant.color}
+                  onClick={() => {
+                    setSelectedVariantIndex(index);
+                    emblaApi?.scrollTo(0);
+                  }}
+                  className={`w-8 h-8 rounded-full border-2 ${
+                    selectedVariantIndex === index
+                      ? "border-rosegold"
+                      : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: variant.color }}
+                  title={variant.color}
+                />
+              ))}
+            </div>
+          </div>
 
           {product.sizes && (
             <div>

@@ -12,7 +12,16 @@ export default function ProductsAdminPage() {
     const fetchProducts = async () => {
       try {
         const response = await fetch("/api/products");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType?.includes("application/json")) {
+          throw new Error("Received non-JSON response");
+        }
         const data = await response.json();
+        console.log(data);
         setProducts(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -36,81 +45,80 @@ export default function ProductsAdminPage() {
             key={product._id?.toString()}
             className="w-[calc(50%-8px)] sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/4"
           >
-            
-              <div className="border p-4 rounded-lg shadow flex flex-col md:flex-row items-center">
-                {/* Image Section */}
-                <div className="w-full md:w-1/3 h-32 md:h-auto overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover rounded"
-                  />
-                </div>
+            <div className="border p-4 rounded-lg shadow flex flex-col md:flex-row items-center">
+              {/* Image Section */}
+              <div className="w-full md:w-1/3 h-32 md:h-auto overflow-hidden">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover rounded"
+                />
+              </div>
 
-                {/* Product Details Section */}
-                <div className="w-full md:w-2/3 md:pl-4 mt-4 md:mt-0">
-                  <h2 className="text-lg font-semibold truncate">
-                    {product.name}
-                  </h2>
-                  <p className="text-gray-600 mt-2 text-sm line-clamp-3">
-                    {product.description}
-                  </p>
-                  <p className="text-gray-800 mt-2 text-sm">
-                    <strong>Price:</strong> ₹{product.price}
-                  </p>
-                  <p className="text-gray-800 mt-2 text-sm">
-                    <strong>Category:</strong> {product.category?.name  || "unknown category"}
-                  </p>
-                  <p className="text-gray-800 mt-2 text-sm">
-                    <strong>Size:</strong> {product.sizes}
-                  </p>
-                  <p className="text-gray-800 mt-2 text-sm">
-                    <strong>Brand:</strong> {product.brand}
-                  </p>
+              {/* Product Details Section */}
+              <div className="w-full md:w-2/3 md:pl-4 mt-4 md:mt-0">
+                <h2 className="text-lg font-semibold truncate">
+                  {product.name}
+                </h2>
+                <p className="text-gray-600 mt-2 text-sm line-clamp-3">
+                  {product.description}
+                </p>
+                <p className="text-gray-800 mt-2 text-sm">
+                  <strong>Price:</strong> ₹{product.price}
+                </p>
+                <p className="text-gray-800 mt-2 text-sm">
+                  <strong>Category:</strong>{" "}
+                  {product.category?.name || "unknown category"}
+                </p>
+                <p className="text-gray-800 mt-2 text-sm">
+                  <strong>Size:</strong> {product.sizes}
+                </p>
+                <p className="text-gray-800 mt-2 text-sm">
+                  <strong>Brand:</strong> {product.brand}
+                </p>
 
-                  {/* Buttons */}
-                  <div className="flex gap-2 mt-4">
-                    <Link
-                      href={`/admin/products/${product._id}`}
-                      className="btn btn-soft btn-primary"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      href={`/admin/products/update/${product._id}`}
-                      className="btn btn-soft btn-secondary"
-                    >
-                      Update
-                    </Link>
+                {/* Buttons */}
+                <div className="flex gap-2 mt-4">
+                  <Link
+                    href={`/admin/products/${product._id}`}
+                    className="btn btn-soft btn-primary"
+                  >
+                    View
+                  </Link>
+                  <Link
+                    href={`/admin/products/update/${product._id}`}
+                    className="btn btn-soft btn-secondary"
+                  >
+                    Update
+                  </Link>
 
-                    <button
-                      className="btn btn-soft btn-danger"
-                      onClick={async () => {
-                        try {
-                          const res = await fetch(
-                            `/api/products/${product._id}`,
-                            {
-                              method: "DELETE",
-                              headers: { "Content-Type": "application/json" },
-                            }
-                          );
-
-                          if (!res.ok) {
-                            throw new Error("Product not found");
+                  <button
+                    className="btn btn-soft btn-danger"
+                    onClick={async () => {
+                      try {
+                        const res = await fetch(
+                          `/api/products/${product._id}`,
+                          {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
                           }
+                        );
 
-                          router.push("/admin/products");
-                        } catch (error: any) {
-                          console.log(error);
+                        if (!res.ok) {
+                          throw new Error("Product not found");
                         }
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
+
+                        router.push("/admin/products");
+                      } catch (error: any) {
+                        console.log(error);
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
-            
+            </div>
           </li>
         ))}
       </ul>

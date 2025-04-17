@@ -104,14 +104,18 @@ export default function Header() {
             >
               Shop
             </Link>
-            {/* <Link href="/contact-us" className="text-primary hover:text-secondary font-medium">
-              Contact Us
-            </Link> */}
+
             <Link
               href="/blogs"
               className="text-primary hover:text-secondary font-medium"
             >
               Blogs
+            </Link>
+            <Link
+              href="/contact"
+              className="text-primary hover:text-secondary font-medium"
+            >
+              Contact Us
             </Link>
             {/* <Link href="/about" className="text-primary hover:text-secondary font-medium">
               About
@@ -129,14 +133,11 @@ export default function Header() {
               >
                 <Search className="h-5 w-5" />
               </Button>
-            ) : (<Button
-            variant="disableBtn"
-            size="icon"
-            aria-label="Search"
-            
-          >
-            <Search className="h-5 w-5 hidden " />
-          </Button>) }
+            ) : (
+              <Button variant="disableBtn" size="icon" aria-label="Search">
+                <Search className="h-5 w-5 hidden " />
+              </Button>
+            )}
 
             {/* User */}
             {/* <Link href="/account">
@@ -236,19 +237,19 @@ export default function Header() {
               >
                 Shop
               </Link>
-              {/* <Link
-                href="/contact-us"
-                className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact Us
-              </Link> */}
               <Link
                 href="/blogs"
                 className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Blogs
+              </Link>
+              <Link
+                href="/contact"
+                className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact Us
               </Link>
               {/* <Link
                 href="/about"

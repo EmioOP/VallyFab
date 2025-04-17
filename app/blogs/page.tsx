@@ -80,7 +80,7 @@ export default function BlogPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
               <Image
-                src={posts[0].image}
+                src={posts[0].image.url}
                 alt={posts[0].title}
                 width={800}
                 height={600}
@@ -150,7 +150,7 @@ export default function BlogPage() {
             <Link href={`/blogs/${post._id}`} className="block">
               <div className="aspect-[4/3] overflow-hidden">
                 <Image
-                  src={post.image}
+                  src={post.image.url}
                   alt={post.title}
                   width={800}
                   height={600}

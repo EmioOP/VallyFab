@@ -5,8 +5,9 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
-import { CartProvider } from "@/components/cart-provider";
+
 import Providers from "@/components/Providers";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Poppins({ subsets: ["latin"], weight: "400" });
 
@@ -27,15 +28,14 @@ export default function RootLayout({
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
         /> */}
+        <Analytics />
         <Providers>
-          <CartProvider>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-            <Toaster />
-          </CartProvider>
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <Toaster />
         </Providers>
       </body>
     </html>

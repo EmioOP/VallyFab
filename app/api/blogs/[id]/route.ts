@@ -4,6 +4,7 @@ import Blog from "@/model/blogModel";
 import { getServerSession } from "next-auth";
 import { NextResponse, NextRequest } from "next/server";
 import { fileDelete } from "../../imagekit-auth/route";
+import { isValidObjectId } from "mongoose";
 
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -11,6 +12,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     await connectDB();
 
     const { id } = await params;
+
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Invalid blog id" }, { status: 400 })
+    }
 
     const blog = await Blog.findById(id).lean();
 
@@ -38,7 +43,16 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const { id } = await params;
 
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Invalid blog id" }, { status: 400 })
+    }
+
     const { title, slug, content, author, category, excert, image } = await request.json()
+    console.log(image)
+
+    const validatedImage = {
+      
+    }
 
     await connectDB();
 
@@ -50,12 +64,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       author: author || "Vally",
       category: category || "Fashion",
       excert,
-      image: image?.startsWith('http')
-        ? image
-        : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}${image}`
-    }, {
+      image: image}, {
       new: true
     })
+
 
     if (!post) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 })
@@ -82,6 +94,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     const { id } = await params;
 
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Invalid blog id" }, { status: 400 })
+    }
+
     await connectDB();
 
 
@@ -92,10 +108,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: "Blog not found" }, { status: 404 })
     }
 
-    const imageDeleted = await fileDelete(post.image)
+    const imageDeleted = await fileDelete(post.image.fileId)
     console.log(imageDeleted)
 
-    if(imageDeleted){
+    if(!imageDeleted){
       return NextResponse.json({ error: "unable to delete blog image" }, { status: 500 })
 
     }

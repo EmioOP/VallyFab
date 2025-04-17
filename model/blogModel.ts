@@ -38,8 +38,14 @@ const blogSchema = new mongoose.Schema<IBlog>({
         default: "Vally"
     },
     image: {
-        type: String,
-        // required: true
+        url:{
+            type: String,
+        required: true
+        },
+        fileId:{
+            type:String,
+            required:true
+        } 
     },
     category:{
         type:String,

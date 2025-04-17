@@ -15,6 +15,9 @@ export default withAuth(
         if (pathname.startsWith("/admin") && token?.role !== "admin") {
             return NextResponse.redirect(new URL("/", req.url))
         }
+        // if (token?.role === "admin" && pathname.startsWith("/admin") === false) {
+        //     return NextResponse.redirect(new URL("/admin", req.url))
+        // }
 
         return NextResponse.next()
     },
@@ -29,21 +32,18 @@ export default withAuth(
                     pathname === "/login" ||
                     pathname === "/register" ||
                     pathname.startsWith("/api/webhook") ||
-                    pathname.startsWith("/api/products") ||
+                    pathname.startsWith("/api/products/") ||
                     pathname.startsWith("/shop") ||
                     pathname === "/" ||
-                    pathname.startsWith("/api/blogs") ||
+                    pathname.startsWith("/api/blogs/") ||
                     pathname.startsWith("/blogs")
                 ) {
                     return true
                 }
-
                 // Admin route protection
                 if (pathname.startsWith("/admin")) {
                     return token?.role === "admin"
                 }
-
-
                 // All other routes are public
                 return true
             }
