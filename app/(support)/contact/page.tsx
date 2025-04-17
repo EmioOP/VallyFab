@@ -10,7 +10,7 @@ export default function ContactPage() {
     name: "",
     email: "",
     subject: "",
-    message: ""
+    content: ""
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -22,7 +22,7 @@ export default function ContactPage() {
     setError("");
     
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/api/contacts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,8 +33,9 @@ export default function ContactPage() {
       if (!response.ok) throw new Error("Failed to send message");
       
       setSuccess(true);
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      setFormData({ name: "", email: "", subject: "", content: "" });
     } catch (err) {
+      console.log(err)
       setError("Failed to send message. Please try again later.");
     } finally {
       setLoading(false);
@@ -84,8 +85,8 @@ export default function ContactPage() {
                 <div>
                   <Textarea
                     placeholder="Your Message"
-                    value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    value={formData.content}
+                    onChange={(e) => setFormData({...formData, content: e.target.value})}
                     rows={5}
                     required
                   />

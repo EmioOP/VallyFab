@@ -1,8 +1,12 @@
+
 import Link from "next/link";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 
+
 export default function Footer() {
+  
   return (
+
     <footer className="bg-white border-t">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
