@@ -284,7 +284,7 @@ export default function ProductsGrid() {
                     _id={product._id}
                     name={product.name}
                     price={product.price}
-                    image={`${product.image}?tr=w-667,h-1000`}
+                    image={`${product.image}?tr=w-400,h-600`}
                     category={product.category.name}
                     sizes={product.sizes}
                   />

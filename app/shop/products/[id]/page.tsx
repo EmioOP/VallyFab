@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Minus, Plus, Heart, Share2, Star, ShoppingCart } from "lucide-react";
 import AddToCartButton from "@/components/add-to-cart-button";
 import { IProduct } from "@/model/productModel";
+import { useNotification } from "@/components/Notification";
 // import { DotButton, useDotButton } from './EmblaCarouselDotButton';
 
 function useDotButton(emblaApi: any) {
@@ -65,6 +66,7 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [error, setError] = useState("");
+  const { showNotification } = useNotification();
 
   // Embla Carousel setup
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
@@ -77,7 +79,12 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     if (!product) return;
-    const phoneNumber = process.env.NEXT_PUBLIC_SHOP_WHATSAPP_NUMBER;
+    if (!selectedSize) {
+      showNotification("Please Select Size","error")
+      return;
+    }
+
+    const phoneNumber = process.env.NEXT_PUBLIC_SHOP_WHATSAPP_NUMBER!;
     const message = `Hi, I want to buy the following product:
     
 *Product Name:* ${product.name}
@@ -339,20 +346,21 @@ Please confirm availability and proceed with the order.`;
 
             <AddToCartButton
               product={{
-                id:product._id,
-                name:product.name,
-                vallyId:product.vallyId,
-                price:product.price,
-                size:selectedSize,
-                image:product.image,
-                color:product.variants[selectedVariantIndex].color || "Colour not selected",
-                quantity:1
+                id: product._id,
+                name: product.name,
+                vallyId: product.vallyId,
+                price: product.price,
+                size: selectedSize,
+                image: product.image,
+                color:
+                  product.variants[selectedVariantIndex].color ||
+                  "Colour not selected",
+                quantity: 1,
               }}
               varient={"outline"}
               className={
                 "flex-1  border-rosegold  text-rosegold hover:bg-rosegold/10"
               }
-              
             />
 
             {/* <Button

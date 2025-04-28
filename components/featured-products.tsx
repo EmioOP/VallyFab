@@ -35,7 +35,7 @@ export default function FeaturedProducts() {
                     _id={product._id}
                     name={product.name}
                     price={product.price}
-                    image ={`${product.image}?tr=w-667,h-1000`}
+                    image ={`${product.image}?tr=w-400,h-600`}
             />
           ))}
         </div>

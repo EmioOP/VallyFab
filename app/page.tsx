@@ -8,17 +8,17 @@ export default function LandingPage() {
   const categories = [
     {
       name: "Ladies Dresses",
-      img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg",
+      img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg?tr=w-400",
       db_name: "women",
     },
     {
       name: "Kids Collection",
-      img: "/kids.jpeg",
+      img: "https://ik.imagekit.io/bufohim2jd/af665e99-d6f3-474e-9f39-4c36faa01f76.jpeg?tr=w-400",
       db_name: "kids",
     },
     {
       name: "Accessories",
-      img: "/accessories.jpeg",
+      img: "https://ik.imagekit.io/bufohim2jd/accessories.jpeg?tr=w-400",
       db_name: "accessories",
     },
     {

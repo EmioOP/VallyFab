@@ -1,19 +1,23 @@
 import { authOptions } from "@/lib/auth"
 import { connectDB } from "@/lib/db"
 import Product, { IProduct } from "@/model/productModel"
-import { Types } from "mongoose"
 import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
+import { isValidObjectId } from "mongoose";
+
 
 
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await props.params
+        if (!isValidObjectId(id)) {
+            return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
+        }
         await connectDB()
 
         const product = await Product.findById(id)
-            .populate('category',"name") 
-            .populate('subCategory',"name")
+            .populate('category', "name")
+            .populate('subCategory', "name")
             .lean()
 
         if (!product) {
@@ -35,6 +39,10 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
         }
 
         const { id } = await props.params
+
+        if (!isValidObjectId(id)) {
+            return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
+        }
         console.log(id)
         await connectDB()
 
@@ -62,7 +70,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
         const { id } = await params
 
-        if (!Types.ObjectId.isValid(id)) {
+        if (!isValidObjectId(id)) {
             return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
         }
 
@@ -86,7 +94,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             stock: body.stock,
             image: body.image?.startsWith('http')
                 ? body.image
-                : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}${body.image}`
+                : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${body.image}`
         }, { new: true })
 
         if (!updateProduct) {

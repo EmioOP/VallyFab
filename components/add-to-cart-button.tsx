@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast"
 interface AddToCartButtonProps {
   product: Omit<CartItem, "quantity"> & { quantity: number }
   varient?:string
-  className?: string
+  className?: stringp
 }
 
 export default function AddToCartButton({ product,varient, className="flex-1 border-rosegold text-rosegold hover:bg-rosegold/10"}: AddToCartButtonProps) {

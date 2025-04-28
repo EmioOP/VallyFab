@@ -24,7 +24,7 @@ const nextConfig = {
       ],
   },
   experimental: {
-    webpackBuildWorker: false,
+    webpackBuildWorker: true,
     // parallelServerBuildTraces: true,
     // parallelServerCompiles: true,
   },
