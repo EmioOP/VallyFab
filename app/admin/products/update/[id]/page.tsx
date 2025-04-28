@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import FileUpload from "@/components/FileUpload";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
-import { IProduct, ProductFormData } from "@/model/productModel";
+import { IProduct } from "@/model/productModel";
 import { ICategory } from "@/model/categoryModel";
 import { ISubCategory } from "@/model/subCategoryModel";
 import { COLOR_OPTIONS } from "@/lib/constants";
@@ -18,9 +18,11 @@ export default function EditProductForm() {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingSubCategories, setLoadingSubCategories] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [variants, setVariants] = useState<Array<{ color: string; images: string[] }>>([]);
+  const [variants, setVariants] = useState<
+    Array<{ color: string; images: string[] }>
+  >([]);
   const [currentColor, setCurrentColor] = useState("");
-  const [formData, setFormData] = useState<Partial<ProductFormData>>({
+  const [formData, setFormData] = useState({
     vallyId: "",
     name: "",
     description: "",
@@ -34,7 +36,7 @@ export default function EditProductForm() {
     stock: 0,
     material: "",
     fabricSize: "",
-    typeOfProduct: ""
+    typeOfProduct: "",
   });
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -43,10 +45,40 @@ export default function EditProductForm() {
   const baseUrl = process.env.NEXT_PUBLIC_URL_ENDPOINT!;
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to fetch product");
+
+        const product = data.product;
+        setFormData({
+          ...product,
+          price: product.price,
+          sizes: product.sizes,
+          variants: product.variants,
+          category: product.category._id,
+          subCategory: product.subCategory._id,
+        });
+        setSelectedSizes(product.sizes);
+        setVariants(product.variants);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch product"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/categories");
+        const response = await fetch("/api/categories/");
         const data = await response.json();
+        console.log(data);
         setCategories(data.categories);
       } catch (error) {
         setError("Failed to load categories");
@@ -62,10 +94,12 @@ export default function EditProductForm() {
       const fetchSubCategories = async () => {
         try {
           setLoadingSubCategories(true);
+
           const response = await fetch(
             `/api/subcategories?categoryId=${formData.category}`
           );
           const data = await response.json();
+          console.log(data);
           setSubCategories(data.subCategories);
         } catch (error) {
           setError("Failed to load subcategories");
@@ -76,31 +110,6 @@ export default function EditProductForm() {
       fetchSubCategories();
     }
   }, [formData.category]);
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await fetch(`/api/products/${id}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Failed to fetch product");
-        
-        const product = data.product;
-        setFormData({
-          ...product,
-          price: product.price,
-          sizes: product.sizes,
-          variants: product.variants
-        });
-        setSelectedSizes(product.sizes);
-        setVariants(product.variants);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch product");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProduct();
-  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,11 +135,11 @@ export default function EditProductForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          variants: variants.map(v => ({
+          variants: variants.map((v) => ({
             color: v.color,
-            images: v.images.map(img => img.split("/").pop() || "")
+            images: v.images.map((img) => img.split("/").pop() || ""),
           })),
-          image: formData.image?.split("/").pop() || ""
+          image: formData.image?.split("/").pop() || "",
         }),
       });
 
@@ -146,23 +155,27 @@ export default function EditProductForm() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSizeChange = (size: string) => {
     const newSizes = selectedSizes.includes(size)
-      ? selectedSizes.filter(s => s !== size)
+      ? selectedSizes.filter((s) => s !== size)
       : [...selectedSizes, size];
 
     setSelectedSizes(newSizes);
-    setFormData(prev => ({ ...prev, sizes: newSizes }));
+    setFormData((prev) => ({ ...prev, sizes: newSizes }));
   };
 
   const addColorVariant = () => {
     const colorName = COLOR_OPTIONS.find(
-      c => c.toLowerCase() === currentColor.trim().toLowerCase()
+      (c) => c.toLowerCase() === currentColor.trim().toLowerCase()
     );
 
     if (!colorName) {
@@ -170,46 +183,58 @@ export default function EditProductForm() {
       return;
     }
 
-    if (!variants.some(v => v.color === colorName)) {
-      setVariants(prev => [...prev, { color: colorName, images: [] }]);
+    if (!variants.some((v) => v.color === colorName)) {
+      setVariants((prev) => [...prev, { color: colorName, images: [] }]);
       setCurrentColor("");
     }
   };
 
   const removeVariant = (colorToRemove: string) => {
-    setVariants(prev => prev.filter(v => v.color !== colorToRemove));
+    setVariants((prev) => prev.filter((v) => v.color !== colorToRemove));
   };
 
   const handleMainImageUpload = (response: IKUploadResponse) => {
-    setFormData(prev => ({ ...prev, image: response.filePath }));
+    setFormData((prev) => ({ ...prev, image: response.filePath }));
     setSuccess("Main image uploaded successfully!");
   };
 
-  const handleVariantImageUpload = (response: IKUploadResponse, color: string) => {
-    setVariants(prev => prev.map(v => {
-      if (v.color === color) {
-        return { ...v, images: [...v.images, response.filePath] };
-      }
-      return v;
-    }));
+  const handleVariantImageUpload = (
+    response: IKUploadResponse,
+    color: string
+  ) => {
+    setVariants((prev) =>
+      prev.map((v) => {
+        if (v.color === color) {
+          return { ...v, images: [...v.images, response.filePath] };
+        }
+        return v;
+      })
+    );
     setSuccess("Variant image uploaded successfully!");
   };
 
   const removeVariantImage = (color: string, index: number) => {
-    setVariants(prev => prev.map(v => {
-      if (v.color === color) {
-        return { ...v, images: v.images.filter((_, i) => i !== index) };
-      }
-      return v;
-    }));
+    setVariants((prev) =>
+      prev.map((v) => {
+        if (v.color === color) {
+          return { ...v, images: v.images.filter((_, i) => i !== index) };
+        }
+        return v;
+      })
+    );
   };
 
-  if (loading) return <div className="text-center py-4"><Loader2 className="animate-spin h-8 w-8 mx-auto" /></div>;
+  if (loading)
+    return (
+      <div className="text-center py-4">
+        <Loader2 className="animate-spin h-8 w-8 mx-auto" />
+      </div>
+    );
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-base-100 rounded-xl shadow-lg">
       <h1 className="text-xl font-bold mb-8 text-center">Edit Product</h1>
-      
+
       {error && <div className="alert alert-error mb-4">{error}</div>}
       {success && <div className="alert alert-success mb-4">{success}</div>}
 
@@ -280,7 +305,7 @@ export default function EditProductForm() {
               ) : (
                 <>
                   <option value="">Select Category</option>
-                  {categories.map(category => (
+                  {categories.map((category) => (
                     <option key={category._id} value={category._id}>
                       {category.name}
                     </option>
@@ -308,7 +333,7 @@ export default function EditProductForm() {
               ) : (
                 <>
                   <option value="">Select Subcategory</option>
-                  {subCategories.map(sub => (
+                  {subCategories.map((sub) => (
                     <option key={sub._id} value={sub._id}>
                       {sub.name}
                     </option>
@@ -339,7 +364,7 @@ export default function EditProductForm() {
               <span className="label-text">Available Sizes</span>
             </label>
             <div className="flex flex-wrap gap-2">
-              {["S", "M", "L", "XL", "XXL"].map(size => (
+              {["S", "M", "L", "XL", "XXL"].map((size) => (
                 <label key={size} className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -451,16 +476,16 @@ export default function EditProductForm() {
                 </button>
               </div>
               <datalist id="colors-list">
-                {COLOR_OPTIONS.map(color => (
+                {COLOR_OPTIONS.map((color) => (
                   <option key={color} value={color} />
                 ))}
               </datalist>
 
-              {variants.map(variant => (
+              {variants.map((variant) => (
                 <div key={variant.color} className="border p-4 rounded-lg">
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-2">
-                      <div 
+                      <div
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: variant.color }}
                       />
@@ -478,7 +503,9 @@ export default function EditProductForm() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                       <FileUpload
-                        onSuccess={(res) => handleVariantImageUpload(res, variant.color)}
+                        onSuccess={(res) =>
+                          handleVariantImageUpload(res, variant.color)
+                        }
                         disabled={variant.images.length >= 4}
                       />
                       <span className="text-sm">
@@ -496,7 +523,9 @@ export default function EditProductForm() {
                           />
                           <button
                             type="button"
-                            onClick={() => removeVariantImage(variant.color, index)}
+                            onClick={() =>
+                              removeVariantImage(variant.color, index)
+                            }
                             className="btn btn-circle btn-xs absolute -top-2 -right-2"
                           >
                             ×

@@ -202,7 +202,7 @@ Please confirm availability and proceed with the order.`;
                 (image, index) => (
                   <div className="embla__slide aspect-square" key={index}>
                     <Image
-                      src={image || "/placeholder.svg"}
+                      src={`${image}?tr=w-600,h-900,cm-pad_resize,bg-FFFFFF` || "/placeholder.svg"}
                       alt={product.name}
                       width={800}
                       height={800}
