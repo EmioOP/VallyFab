@@ -136,6 +136,7 @@ Please confirm availability and proceed with the order.`;
     );
   };
 
+  //add cart on server side not using now
   const handleAddToCart = async () => {
     if (!product) return;
     try {

@@ -149,7 +149,7 @@ export default function BlogPostPage() {
         {post.image && (
           <div className="mb-8 rounded-lg overflow-hidden">
             <Image
-              src={post.image}
+              src={post.image.url}
               alt={post.title}
               width={1200}
               height={600}
