@@ -13,7 +13,7 @@ export default function page() {
   return (
     <section className="container mx-auto px-4 py-12 md:py-24">
       <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
-        
+
         {/* <div className="md:w-1/2 w-full">
           <div className="relative aspect-square rounded-xl overflow-hidden shadow-xl">
             <Image
@@ -24,7 +24,6 @@ export default function page() {
             />
           </div>
         </div> */}
-
         <div className="md:w-1/2 w-full space-y-4 md:space-y-6">
           <h2 className="text-2xl md:text-3xl font-bold text-primary">
             About Us

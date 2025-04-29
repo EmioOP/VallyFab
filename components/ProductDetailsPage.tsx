@@ -414,6 +414,27 @@ Please confirm availability and proceed with the order.`;
         </div>
       </div>
 
+      <div className="mt-16">
+        <div className="border-b">
+          <div className="flex overflow-x-auto">
+            <button className="px-4 py-2 font-medium text-rosegold border-b-2 border-rosegold">
+              Product Description
+            </button>
+          </div>
+        </div>
+
+        <div className="py-3">
+          <div className="prose grid grid-cols-1 max-w-none text-gray-600">
+            
+            <div>
+              <div className=" text-primary font-bold whitespace-pre-line">
+                {product.description || "No description available"}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Product Details Tabs */}
       <div className="mt-16">
         <div className="border-b">
@@ -449,13 +470,12 @@ Please confirm availability and proceed with the order.`;
                 </p>
               </div>
             )}
-
-            <div>
+            {/* <div>
               <h4 className="text-gray-600 font-thin mb-1">Description:</h4>
               <p className=" text-primary font-bold">
                 {product.description || "No description available"}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
