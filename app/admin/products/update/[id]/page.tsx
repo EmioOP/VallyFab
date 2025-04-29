@@ -364,7 +364,7 @@ export default function EditProductForm() {
               <span className="label-text">Available Sizes</span>
             </label>
             <div className="flex flex-wrap gap-2">
-              {["S", "M", "L", "XL", "XXL"].map((size) => (
+              {["XS","S", "M", "L", "XL", "XXL","FREE SIZE","STANDARD","NA"].map((size) => (
                 <label key={size} className="flex items-center gap-2">
                   <input
                     type="checkbox"

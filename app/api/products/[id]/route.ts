@@ -10,6 +10,7 @@ import { isValidObjectId } from "mongoose";
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await props.params
+
         if (!isValidObjectId(id)) {
             return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
         }
@@ -43,7 +44,6 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
         if (!isValidObjectId(id)) {
             return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
         }
-        console.log(id)
         await connectDB()
 
 
@@ -101,9 +101,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         if (!updateProduct) {
             return NextResponse.json({ error: "Product not found" }, { status: 404 })
         }
-
-        console.log(updateProduct)
-
 
         return NextResponse.json({ product: updateProduct }, { status: 200 })
 

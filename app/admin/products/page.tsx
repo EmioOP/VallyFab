@@ -21,13 +21,11 @@ export default function ProductsAdminPage() {
           throw new Error("Received non-JSON response");
         }
         const data = await response.json();
-        console.log(data);
         setProducts(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
-
     fetchProducts();
   }, []);
 

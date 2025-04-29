@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
@@ -10,8 +10,6 @@ import {
   Plus,
   Heart,
   Share2,
-  Star,
-  ShoppingCart,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -133,7 +131,7 @@ export default function ProductDetailPage({ serverProduct }: Props) {
 
   const handleBuyNow = () => {
     if (!product) return;
-    if (selectedSize !== "NA" && !selectedSize) {
+    if (product.sizes[0] !== "NA" && !selectedSize) {
       showNotification("Please Select Size", "error");
       return;
     }
@@ -355,7 +353,8 @@ export default function ProductDetailPage({ serverProduct }: Props) {
             </div>
           </div>
 
-          {product.sizes && (
+            
+          {/* {product.sizes && (
             <div>
               <h3 className="font-medium mb-2">Size</h3>
               <div className="flex flex-wrap gap-2">
@@ -374,7 +373,41 @@ export default function ProductDetailPage({ serverProduct }: Props) {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
+
+
+          {
+            product?.sizes && product.sizes[0] !== "NA" ? (
+              <div>
+              <h3 className="font-medium mb-2">Size</h3>
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((size, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedSize(size)}
+                    className={`w-12 h-12 flex items-center justify-center border rounded-md ${
+                      selectedSize === size
+                        ? "border-rosegold bg-rosegold/10 text-rosegold"
+                        : "border-gray-300 hover:border-rosegold"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+            )  : (
+              <div>
+              <h3 className="font-medium mb-2">Size</h3>
+              <div className="flex flex-wrap gap-2">
+                  <button
+                    className={`h-12`}>
+                    Not Applicable For This Product
+                  </button>
+              </div>
+            </div>
+            )
+          }
 
           <div>
             <h3 className="font-medium mb-2">Quantity</h3>
