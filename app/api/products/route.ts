@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/auth"
 import { connectDB } from "@/lib/db"
 import Product from "@/model/productModel"
+import mongoose,{ isValidObjectId } from "mongoose"
 import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -18,9 +19,8 @@ export async function GET(request: NextRequest) {
         const maxPrice = parseFloat(searchParams.get("maxPrice") || "0");
         const categoryIds = searchParams.get("categories")?.split(",").filter(Boolean) || [];
         const sortOption = searchParams.get("sort") || "featured";
-        
-        const skip = (page - 1) * limit;
 
+        const skip = (page - 1) * limit;
         await connectDB();
 
         // Build the filter object dynamically
@@ -38,11 +38,20 @@ export async function GET(request: NextRequest) {
             if (maxPrice > 0) filter.price.$lte = maxPrice;
         }
 
+
+        const validCategoryIds = categoryIds
+            .filter(id => isValidObjectId(id))
+            .map(id => new mongoose.Types.ObjectId(id));
+
+        if (validCategoryIds.length > 0) {
+            filter.category = { $in: validCategoryIds };
+        }
+
         // Filter by category
         if (categoryIds.length > 0) {
             filter.category = { $in: categoryIds };
 
-            
+
         }
 
         // Sorting logic
@@ -84,8 +93,8 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
 
         // Validate required fields
-        if (!body.name || !body.vallyId || !body.price || !body.category || 
-            !body.brand || !body.sizes || !body.image || !body.stock || 
+        if (!body.name || !body.vallyId || !body.price || !body.category ||
+            !body.brand || !body.sizes || !body.image || !body.stock ||
             !body.material || !body.typeOfProduct) {
             return NextResponse.json({ error: "All required fields must be provided" }, { status: 400 });
         }
@@ -100,8 +109,8 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: "Each variant must have a color and images array" }, { status: 400 });
             }
             if (variant.images.length !== 4) {
-                return NextResponse.json({ 
-                    error: `Each variant must have exactly 4 images (${variant.color} has ${variant.images.length})` 
+                return NextResponse.json({
+                    error: `Each variant must have exactly 4 images (${variant.color} has ${variant.images.length})`
                 }, { status: 400 });
             }
         }
@@ -109,7 +118,7 @@ export async function POST(request: NextRequest) {
         // Process images to include full URL if needed
         const processedVariants = body.variants.map((variant: any) => ({
             color: variant.color,
-            images: variant.images.map((img: string) => 
+            images: variant.images.map((img: string) =>
                 img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${img}`
             )
         }));
@@ -125,8 +134,8 @@ export async function POST(request: NextRequest) {
             brand: body.brand,
             sizes: body.sizes,
             variants: processedVariants,
-            image: body.image.startsWith('http') 
-                ? body.image 
+            image: body.image.startsWith('http')
+                ? body.image
                 : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${body.image}`,
             material: body.material,
             fabricSize: body.fabricSize || "",
@@ -143,7 +152,7 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
         console.error(error);
         return NextResponse.json(
-            { error: error.message || "Internal server error" }, 
+            { error: error.message || "Internal server error" },
             { status: 500 }
         );
     }

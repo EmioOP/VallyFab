@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useCart } from "./cart-provider";
 import { Button } from "./ui/button";
-import { ShoppingBag, Menu, X, Search, User,ChevronDown } from "lucide-react";
+import { ShoppingBag, Menu, X, Search, User, ChevronDown } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -17,12 +17,26 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isShopSubmenuOpen, setIsShopSubmenuOpen] = useState(false);
 
   const userMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+        const data = await response.json();
+        setCategories(data.categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -246,61 +260,19 @@ export default function Header() {
 
                 {isShopSubmenuOpen && (
                   <div className="ml-4 mt-1 space-y-1">
-                    <Link
-                      href="/shop/products?category=women"
-                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsShopSubmenuOpen(false);
-                      }}
-                    >
-                      Women
-                    </Link>
-
-                    <Link
-                      href="/shop/products?category=accessories"
-                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsShopSubmenuOpen(false);
-                      }}
-                    >
-                      Accessories
-                    </Link>
-
-                    <Link
-                      href="/shop/products?category=kids"
-                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsShopSubmenuOpen(false);
-                      }}
-                    >
-                      Kids
-                    </Link>
-
-                    <Link
-                      href="/shop/products?category=toys"
-                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsShopSubmenuOpen(false);
-                      }}
-                    >
-                      Toys
-                    </Link>
-
-                    <Link
-                      href="/shop/products?category=home"
-                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsShopSubmenuOpen(false);
-                      }}
-                    >
-                      Home
-                    </Link>
-
+                    {categories.map((category) => (
+                      <Link
+                        key={category._id}
+                        href={`/shop/products?category=${category._id}`}
+                        className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          setIsShopSubmenuOpen(false);
+                        }}
+                      >
+                        {category.name}
+                      </Link>
+                    ))}
                   </div>
                 )}
               </div>

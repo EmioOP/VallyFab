@@ -94,7 +94,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             stock: body.stock,
             image: body.image?.startsWith('http')
                 ? body.image
-                : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${body.image}`
+                : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${body.image}`,
+            
         }, { new: true })
 
         if (!updateProduct) {

@@ -16,7 +16,7 @@ interface Category {
 export default function ProductsGrid() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
-  
+
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -27,39 +27,36 @@ export default function ProductsGrid() {
     search: "",
     minPrice: "",
     maxPrice: "",
-    selectedCategories: [] as string[],
+    selectedCategories: categoryParam ? [categoryParam] : [],
     selectedSizes: [] as string[],
     sort: "newest",
   });
   const limit = 10;
 
   useEffect(() => {
-    if (categoryParam && categories.length > 0) {
-      const foundCategory = categories.find(
-        (c) => c.name.toLowerCase() === categoryParam.toLowerCase()
-      );
-      
-      if (foundCategory && !filters.selectedCategories.includes(foundCategory._id)) {
-        handleFilterChange("selectedCategories", [foundCategory._id]);
-      }
+    if (categoryParam && !filters.selectedCategories.includes(categoryParam)) {
+      setFilters((prev) => ({
+        ...prev,
+        selectedCategories: [categoryParam],
+      }));
     }
-  }, [categoryParam, categories, filters.selectedCategories]);
+  }, [categoryParam]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await fetch("/api/categories");
-        if (!response.ok) throw new Error(`Categories failed: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`Categories failed: ${response.status}`);
         const data = await response.json();
         setCategories(data.categories);
-  
-        // Initial category setup moved to the new useEffect
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
+
     fetchCategories();
-  }, [categoryParam]); 
+  }, []);
 
   const fetchProducts = debounce(async () => {
     try {
@@ -77,7 +74,7 @@ export default function ProductsGrid() {
 
       const response = await fetch(`/api/products?${params}`);
       const { products, total } = await response.json();
-      
+
       setProducts(products);
       setTotalPages(Math.ceil(total / limit));
     } catch (error) {
@@ -93,25 +90,25 @@ export default function ProductsGrid() {
   }, [page, filters]);
 
   const handleFilterChange = (name: string, value: string | string[]) => {
-    setFilters(prev => ({ ...prev, [name]: value }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
     setPage(1);
   };
 
   const toggleCategory = (categoryId: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       selectedCategories: prev.selectedCategories.includes(categoryId)
-        ? prev.selectedCategories.filter(id => id !== categoryId)
-        : [...prev.selectedCategories, categoryId]
+        ? prev.selectedCategories.filter((id) => id !== categoryId)
+        : [...prev.selectedCategories, categoryId],
     }));
   };
 
   const toggleSize = (size: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       selectedSizes: prev.selectedSizes.includes(size)
-        ? prev.selectedSizes.filter(s => s !== size)
-        : [...prev.selectedSizes, size]
+        ? prev.selectedSizes.filter((s) => s !== size)
+        : [...prev.selectedSizes, size],
     }));
   };
 
@@ -142,7 +139,10 @@ export default function ProductsGrid() {
         <h3 className="font-semibold text-lg mb-3">Categories</h3>
         <div className="space-y-2">
           {categories.map((category) => (
-            <label key={category._id} className="flex items-center gap-2 cursor-pointer">
+            <label
+              key={category._id}
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <input
                 type="checkbox"
                 checked={filters.selectedCategories.includes(category._id)}
@@ -165,7 +165,7 @@ export default function ProductsGrid() {
             maxPrice: "",
             selectedCategories: [],
             selectedSizes: [],
-            sort: "featured"
+            sort: "featured",
           });
           setShowMobileFilters(false);
         }}
@@ -199,9 +199,9 @@ export default function ProductsGrid() {
         <div className="flex-1">
           {/* Mobile Header */}
           <div className="flex justify-between items-center mb-6 md:hidden">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="flex items-center gap-2"
               onClick={() => setShowMobileFilters(true)}
             >
@@ -236,7 +236,9 @@ export default function ProductsGrid() {
                     <Input
                       placeholder="Search products..."
                       value={filters.search}
-                      onChange={(e) => handleFilterChange("search", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("search", e.target.value)
+                      }
                     />
                   </div>
                   <FilterContent />
@@ -300,7 +302,7 @@ export default function ProductsGrid() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
                   >
                     Previous
@@ -311,7 +313,7 @@ export default function ProductsGrid() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
                   >
                     Next
