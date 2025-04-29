@@ -256,16 +256,7 @@ export default function Header() {
                     >
                       Women
                     </Link>
-                    <Link
-                      href="/shop/products?category=kids"
-                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsShopSubmenuOpen(false);
-                      }}
-                    >
-                      Kids
-                    </Link>
+
                     <Link
                       href="/shop/products?category=accessories"
                       className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
@@ -276,6 +267,18 @@ export default function Header() {
                     >
                       Accessories
                     </Link>
+
+                    <Link
+                      href="/shop/products?category=kids"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsShopSubmenuOpen(false);
+                      }}
+                    >
+                      Kids
+                    </Link>
+
                     <Link
                       href="/shop/products?category=toys"
                       className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
@@ -286,6 +289,7 @@ export default function Header() {
                     >
                       Toys
                     </Link>
+
                     <Link
                       href="/shop/products?category=home"
                       className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
@@ -296,6 +300,7 @@ export default function Header() {
                     >
                       Home
                     </Link>
+
                   </div>
                 )}
               </div>

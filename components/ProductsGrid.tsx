@@ -31,7 +31,19 @@ export default function ProductsGrid() {
     selectedSizes: [] as string[],
     sort: "newest",
   });
-  const limit = 9;
+  const limit = 10;
+
+  useEffect(() => {
+    if (categoryParam && categories.length > 0) {
+      const foundCategory = categories.find(
+        (c) => c.name.toLowerCase() === categoryParam.toLowerCase()
+      );
+      
+      if (foundCategory && !filters.selectedCategories.includes(foundCategory._id)) {
+        handleFilterChange("selectedCategories", [foundCategory._id]);
+      }
+    }
+  }, [categoryParam, categories, filters.selectedCategories]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -40,23 +52,14 @@ export default function ProductsGrid() {
         if (!response.ok) throw new Error(`Categories failed: ${response.status}`);
         const data = await response.json();
         setCategories(data.categories);
-
-        if (categoryParam) {
-          const foundCategory = data.categories.find((c: Category) =>
-            c.name.toLowerCase() === categoryParam.toLowerCase()
-          );
-          if (foundCategory) {
-            
-            handleFilterChange("selectedCategories", [foundCategory._id]);
-          }
-        }
+  
+        // Initial category setup moved to the new useEffect
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
-
     fetchCategories();
-  }, []);
+  }, [categoryParam]); 
 
   const fetchProducts = debounce(async () => {
     try {
