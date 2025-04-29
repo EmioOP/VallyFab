@@ -436,49 +436,7 @@ Please confirm availability and proceed with the order.`;
       </div>
 
       {/* Product Details Tabs */}
-      <div className="mt-16">
-        <div className="border-b">
-          <div className="flex overflow-x-auto">
-            <button className="px-4 py-2 font-medium text-rosegold border-b-2 border-rosegold">
-              Product Details
-            </button>
-          </div>
-        </div>
-
-        <div className="py-3">
-          {/* here added grid added and wrapped in div */}
-          <div className="prose grid grid-cols-2 max-w-none text-gray-600">
-            <div>
-              <h4 className="text-gray-600 font-thin mb-1 ">Fabric:</h4>
-              <p className=" text-primary font-bold">
-                {product.material || "No Fabric Details Available"}
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-gray-600 font-thin mb-1">Type:</h4>
-              <p className=" text-primary font-bold">
-                {product.typeOfProduct || "Type Not Available"}
-              </p>
-            </div>
-            {product.fabricSize && (
-              <div>
-                <h4 className="text-gray-600 font-thin mb-1">Fabric Size:</h4>
-                <p className="text-primary font-bold">
-                  {product.fabricSize ||
-                    "Fabric Length and Width are not Applicable"}
-                </p>
-              </div>
-            )}
-            {/* <div>
-              <h4 className="text-gray-600 font-thin mb-1">Description:</h4>
-              <p className=" text-primary font-bold">
-                {product.description || "No description available"}
-              </p>
-            </div> */}
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }
