@@ -9,22 +9,22 @@ export default function LandingPage() {
     {
       name: "Ladies Dresses",
       img: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg?tr=w-400",
-      db_name: "women",
+      db_id: "67e236c78090c10b23959174",
     },
     {
       name: "Kids Collection",
       img: "https://ik.imagekit.io/bufohim2jd/af665e99-d6f3-474e-9f39-4c36faa01f76.jpeg?tr=w-400",
-      db_name: "kids",
+      db_id: "67e236fa8090c10b23959179",
     },
     {
       name: "Accessories",
       img: "https://ik.imagekit.io/bufohim2jd/accessories.jpeg?tr=w-400",
-      db_name: "accessories",
+      db_id: "67e2372c8090c10b23959183",
     },
     {
       name: "Home",
       img: "/home-decor.jpeg",
-      db_name: "home",
+      db_id: "67e2373d8090c10b23959188",
     },
   ];
 
@@ -115,9 +115,7 @@ export default function LandingPage() {
           {categories.map((category, index) => (
             <Link
               key={index}
-              href={`/shop/products?category=${encodeURIComponent(
-                category.db_name
-              )}`}
+              href={`/shop/products?category=${category.db_id}`}
               className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="relative aspect-square">
