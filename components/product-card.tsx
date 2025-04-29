@@ -15,7 +15,7 @@ export default function ProductCard({
   category,
 }: IProduct) {
   return (
-    <div className="group relative">
+    <div className="group relative shadow-md  rounded">
       <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-100">
         <Link href={`/shop/products/${_id}`}>
           <Image
@@ -49,12 +49,12 @@ export default function ProductCard({
       </div>
       <div className="mt-4 flex justify-between">
         <div>
-          <h3 className="text-sm text-primary">
+          <h3 className="text-sm text-primary ml-2">
             <Link href={`/products/${_id}`}>{name}</Link>
           </h3>
           <p className="mt-1 text-xs text-gray-500">{category?.name}</p>
         </div>
-        <div className="text-right">
+        <div className="text-right mr-2">
             <p className="text-sm font-medium text-primary">{formatPrice(price)}</p>
         </div>
       </div>
