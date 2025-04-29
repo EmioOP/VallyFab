@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useCart } from "./cart-provider";
 import { Button } from "./ui/button";
-import { ShoppingBag, Menu, X, Search, User } from "lucide-react";
+import { ShoppingBag, Menu, X, Search, User,ChevronDown } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -17,6 +17,7 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isShopSubmenuOpen, setIsShopSubmenuOpen] = useState(false);
 
   const userMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -82,7 +83,6 @@ export default function Header() {
                 <Image
                   src="/logo.png"
                   alt="Vally Fabrics Logo"
-
                   fill
                   className="object-contain object-left"
                   priority
@@ -141,7 +141,6 @@ export default function Header() {
             )}
 
             {/* User */}
-            
 
             <div className="relative" ref={userMenuRef}>
               <button
@@ -223,38 +222,105 @@ export default function Header() {
               <Link
                 href="/"
                 className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setIsShopSubmenuOpen(false);
+                }}
               >
                 Home
               </Link>
-              <Link
-                href="/shop"
-                className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Shop
-              </Link>
+
+              {/* Shop with dropdown */}
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setIsShopSubmenuOpen(!isShopSubmenuOpen)}
+                  className="flex items-center justify-between rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                >
+                  <span>Shop</span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform ${
+                      isShopSubmenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isShopSubmenuOpen && (
+                  <div className="ml-4 mt-1 space-y-1">
+                    <Link
+                      href="/shop/products?category=women"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsShopSubmenuOpen(false);
+                      }}
+                    >
+                      Women
+                    </Link>
+                    <Link
+                      href="/shop/products?category=kids"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsShopSubmenuOpen(false);
+                      }}
+                    >
+                      Kids
+                    </Link>
+                    <Link
+                      href="/shop/products?category=accessories"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsShopSubmenuOpen(false);
+                      }}
+                    >
+                      Accessories
+                    </Link>
+                    <Link
+                      href="/shop/products?category=toys"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsShopSubmenuOpen(false);
+                      }}
+                    >
+                      Toys
+                    </Link>
+                    <Link
+                      href="/shop/products?category=home"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsShopSubmenuOpen(false);
+                      }}
+                    >
+                      Home
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Rest of the links */}
               <Link
                 href="/blogs"
                 className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setIsShopSubmenuOpen(false);
+                }}
               >
                 Blogs
               </Link>
               <Link
                 href="/contact"
                 className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setIsShopSubmenuOpen(false);
+                }}
               >
                 Contact Us
               </Link>
-              {/* <Link
-                href="/about"
-                className="block rounded-md px-3 py-2 text-base font-medium text-primary hover:bg-muted"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </Link> */}
             </div>
           </div>
         )}
