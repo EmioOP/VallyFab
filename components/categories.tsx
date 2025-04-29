@@ -6,25 +6,25 @@ const categories = [
     id: "women",
     name: "Women",
     image: "https://ik.imagekit.io/bufohim2jd/blog-image_iia1S0KhT.jpg",
-    db_name: "women"
+    db_id: "67e236c78090c10b23959174"
   },
   {
     id: "tops",
     name: "Kids",
     image: "/kids.jpeg",
-    db_name: "kids"
+    db_id: "67e236fa8090c10b23959179"
   },
   {
     id: "accessories",
     name: "Accessories",
     image: "/accessories.jpeg",
-    db_name: "accessories"
+    db_id: "67e2372c8090c10b23959183"
   },
   {
     id: "home",
     name: "Home",
-    image: "https://img.freepik.com/free-photo/mixed-color-tailoring-leather-tissues-catalog_114579-7247.jpg?t=st=1742113665~exp=1742117265~hmac=c3d008788c4ae8e38847c4b3be7a262490435273893cbba610b49aba64e44acc&w=740",
-    db_name: "home"
+    image: "/home-decor.jpeg",
+    db_id: "67e2373d8090c10b23959188"
   },
 ]
 
@@ -40,7 +40,7 @@ export default function Categories() {
           {categories.map((category) => (
             <Link
               key={category.id}
-              href={`/shop/products?category=${encodeURIComponent(category.db_name)}`}
+              href={`/shop/products?category=${category.db_id}`}
               className="group relative h-full w-full overflow-hidden rounded-lg"
             >
               <div className="relative h-full w-full">
