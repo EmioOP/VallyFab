@@ -45,7 +45,7 @@ export default function AdminProductForm() {
   const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingSubCategories, setLoadingSubCategories] = useState(false);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>(["M"]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(["S"]);
   const [variants, setVariants] = useState<Array<{ color: string; images: string[] }>>([]);
   const [currentColor, setCurrentColor] = useState("");
 
@@ -65,7 +65,7 @@ export default function AdminProductForm() {
       category: "",
       subCategory: "",
       brand: "",
-      sizes: ["M"],
+      sizes: ["S"],
       variants: [],
       image: "",
       stock: 0,
@@ -426,7 +426,7 @@ export default function AdminProductForm() {
             id="sizes"
           >
             <div className="flex flex-wrap gap-4">
-              {["S", "M", "L", "XL", "XXL"].map((size) => (
+              {["XS","S", "M", "L", "XL", "XXL","FREE SIZE","STANDARD","NA"].map((size) => (
                 <label
                   key={size}
                   className="flex items-center gap-2 cursor-pointer"

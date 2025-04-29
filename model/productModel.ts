@@ -66,7 +66,7 @@ const productSchema = new mongoose.Schema<IProduct>({
             type: String,
             required: true,
             enum: {
-                values: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+                values: ["XS", "S", "M", "L", "XL", "XXL", "XXXL","FREE SIZE","STANDARD","NA"],
                 message: "Please select a valid size"
             },
         }

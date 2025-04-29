@@ -133,7 +133,7 @@ export default function ProductDetailPage({ serverProduct }: Props) {
 
   const handleBuyNow = () => {
     if (!product) return;
-    if (!selectedSize) {
+    if (selectedSize !== "NA" && !selectedSize) {
       showNotification("Please Select Size", "error");
       return;
     }
