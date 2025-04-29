@@ -124,6 +124,31 @@ Please confirm availability and proceed with the order.`;
 //     if (params.id) fetchProduct();
 //   }, [params.id]);
 
+
+  //share button 
+  const handleShare = async () => {
+    try {
+
+      
+      const shareData = {
+        title: product.name,
+        text: `Check out ${product.name} - ₹${product.price}`,
+        url: window.location.href,
+      };
+  
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback for desktop browsers
+        await navigator.clipboard.writeText(window.location.href);
+        showNotification("Product link copied to clipboard!", "success");
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      showNotification("Sharing failed. Please try again.", "error");
+    }
+  };
+
   // Update thumbnails when variant changes
   useEffect(() => {
     if (emblaApi && emblaThumbsApi) {
@@ -379,7 +404,9 @@ Please confirm availability and proceed with the order.`;
 
           <div className="pt-4 border-t flex items-center justify-between text-sm text-gray-500">
             <div>Vally ID: {product.vallyId?.toString()}</div>
-            <button className="flex items-center hover:text-rosegold">
+            <button 
+            onClick={handleShare} //sharing the product 
+            className="flex items-center hover:text-rosegold">
               <Share2 className="mr-1 h-4 w-4" />
               Share
             </button>
