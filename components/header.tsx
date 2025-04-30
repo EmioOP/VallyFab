@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { ShoppingBag, Menu, X, Search, User, ChevronDown } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
+import { ICategory } from "@/model/categoryModel";
 
 export default function Header() {
   const router = useRouter();
@@ -17,11 +18,13 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [isShopSubmenuOpen, setIsShopSubmenuOpen] = useState(false);
+  const [isDesktopShopOpen, setIsDesktopShopOpen] = useState(false);
 
   const userMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const desktopShopRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
 
@@ -46,12 +49,20 @@ export default function Header() {
       ) {
         setUserMenuOpen(false);
       }
+
       if (
         mobileMenuRef.current &&
         !mobileMenuRef.current.contains(event.target as Node) &&
         !(event.target as Element).closest("[data-mobile-trigger]")
       ) {
         setMobileMenuOpen(false);
+      }
+
+      if (
+        desktopShopRef.current &&
+        !desktopShopRef.current.contains(event.target as Node)
+      ) {
+         setIsDesktopShopOpen(false);
       }
     }
 
@@ -113,12 +124,43 @@ export default function Header() {
             >
               Home
             </Link>
-            <Link
-              href="/shop"
-              className="text-primary hover:text-secondary font-medium"
-            >
-              Shop
-            </Link>
+
+            <div className="relative" ref={desktopShopRef}>
+              <button
+                onClick={() => setIsDesktopShopOpen(!isDesktopShopOpen)}
+                className="flex items-center text-primary hover:text-secondary font-medium"
+              >
+                Shop
+                <ChevronDown
+                  className={`ml-1 h-4 w-4 transition-transform ${
+                    isDesktopShopOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {isDesktopShopOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 rounded-md border bg-white dark:bg-gray-900 dark:border-gray-700 p-1 shadow-lg z-50">
+                  <Link
+                    href="/shop/products"
+                    className="block rounded-sm px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                    onClick={() => setIsDesktopShopOpen(false)}
+                  >
+                    All Products
+                  </Link>
+                  <div className="my-1 h-px bg-gray-200 dark:bg-gray-700" />
+                  {categories.map((category) => (
+                    <Link
+                      key={category._id.toString()}
+                      href={`/shop/products?category=${category._id}`}
+                      className="block rounded-sm px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                      onClick={() => setIsDesktopShopOpen(false)}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <Link
               href="/blogs"
