@@ -84,6 +84,22 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
         await connectDB()
 
+        //main Image
+        const processedImage = body.image?.startsWith('http')
+            ? body.image
+            : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${body.image}`;
+
+
+        //processing the varients latest update
+        const processedVariants = body.variants ? body.variants.map((variant: any) => ({
+            color: variant.color,
+            images: variant.images.map((img: string) => 
+                img.startsWith('http') 
+                    ? img 
+                    : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${img}`
+            )
+        })) : [];
+
         const updateProduct = await Product.findByIdAndUpdate<IProduct>(id, {
             name: body.name,
             description: body.description,
@@ -92,10 +108,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             brand: body.brand,
             sizes: body.sizes,
             stock: body.stock,
-            image: body.image?.startsWith('http')
-                ? body.image
-                : `${process.env.NEXT_PUBLIC_URL_ENDPOINT}/${body.image}`,
-            
+            image: processedImage,
+            variants: processedVariants
         }, { new: true })
 
         if (!updateProduct) {

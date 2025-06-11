@@ -13,7 +13,8 @@ export default function FeaturedProducts() {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json()
-      setProducts(data.products)
+
+      setProducts(data)
     };
 
     fetchProducts()
@@ -26,7 +27,7 @@ export default function FeaturedProducts() {
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-primary">Featured Products</h2>
           <p className="mt-2 text-gray-600">
-            Discover our handpicked selection of premium fashion items
+            Discover our handpicked selection of premium items
           </p>
         </div>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
