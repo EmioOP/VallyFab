@@ -72,7 +72,10 @@ export default function ProductsGrid() {
         sort: filters.sort,
       });
 
-      const response = await fetch(`/api/products?${params}`);
+      const response = await fetch(`/api/products?${params}`,{
+        cache:"force-cache",
+        next:{revalidate:1800}
+      });
       const { products, total } = await response.json();
 
       setProducts(products);
@@ -269,7 +272,7 @@ export default function ProductsGrid() {
 
           {/* Products Grid */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="h-64 bg-gray-200 rounded-lg"></div>
