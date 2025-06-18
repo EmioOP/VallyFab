@@ -5,7 +5,8 @@ import ProductDetailPage from '@/components/ProductDetailsPage';
 async function getProduct(id: string) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`,{
-      cache:'force-cache'
+      cache:'force-cache', // creating cache of the request
+      next:{revalidate:7200} // revalidates the request after  2 hours...
     });
     if (!res.ok) return null;
     return await res.json();
