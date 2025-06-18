@@ -30,7 +30,15 @@ export default function Admin() {
       href: "/admin/contact",
       icon: "📧",
       color: "bg-orange-500 hover:bg-orange-600"
+    },
+    {
+      title: "Promotions",
+      description: "Create and manage promotional campaigns  - set up featured products, discounts, view active promotions, and analyze their performance.",
+      href: "/admin/promotions",
+      icon: "🎉",
+      color: "bg-orange-500 hover:bg-orange-600"
     }
+
   ];
 
   return (
@@ -130,6 +138,9 @@ export default function Admin() {
             </div>
           </div>
         </div>
+
+
+        
 
         {/* Recent Activity Section */}
         <div className="mt-12">
