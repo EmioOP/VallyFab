@@ -44,7 +44,7 @@ export default function LandingPage() {
             </div>
             <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-primary px-2">
               Vally Fabrics and{" "}
-              <span className="lg:bg-secondary lg:text-white px-1 block md:inline mt-2 md:mt-0">
+              <span className="lg:bg-black lg:text-white px-1 block md:inline mt-2 md:mt-0">
                 Fashion
               </span>
             </h1>
@@ -55,7 +55,7 @@ export default function LandingPage() {
 
           <Link
             href="/shop"
-            className="bg-secondary lg:bg-secondary  px-6 py-3 md:px-8 md:py-4 rounded-lg text-white hover:bg-secondary/90 transition-colors duration-300 text-base md:text-lg font-semibold "
+            className="bg-black lg:bg-black  px-6 py-3 md:px-8 md:py-4 rounded text-white hover:bg-black/90 transition-colors duration-300 text-base md:text-lg font-semibold "
           >
             Explore Collections
           </Link>
@@ -89,7 +89,7 @@ export default function LandingPage() {
               bedding, and beautiful home textiles like curtains, bedsheets,
               pillow covers, and cushions.
             </p>
-            <div className="bg-accent/5 p-4 md:p-6 rounded-xl">
+            <div className="shadow p-4 md:p-6 rounded-xl">
               <p className="text-base md:text-lg text-primary/90 leading-relaxed">
                 <strong className="text-secondary">
                   Our mission is clear:
@@ -137,10 +137,10 @@ export default function LandingPage() {
       </section>
 
       {/* Value Propositions */}
-      <section className="bg-accent/5 py-12 md:py-16">
+      <section className=" py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-            <div className="bg-rosegold/10 p-6 md:p-8 rounded-xl flex-1">
+            <div className="shadow p-6 md:p-8 rounded-xl flex-1">
               <h3 className="text-xl md:text-2xl font-bold text-primary mb-3 md:mb-4">
                 Our Promise
               </h3>
@@ -152,7 +152,7 @@ export default function LandingPage() {
               </ul>
             </div>
 
-            <div className="bg-santoriniblue/10 p-6 md:p-8 rounded-xl flex-1">
+            <div className="shadow p-6 md:p-8 rounded-xl flex-1">
               <h3 className="text-xl md:text-2xl font-bold text-primary mb-3 md:mb-4">
                 Why Choose Us
               </h3>
@@ -169,7 +169,7 @@ export default function LandingPage() {
 
       {/* Collaboration CTA */}
 
-      <section className="bg-accent/10 py-12 md:py-16">
+      <section className=" py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="text-justify max-w-4xl mx-auto">
             {" "}
@@ -177,7 +177,7 @@ export default function LandingPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 md:mb-8 text-center">
               Work, Trade & Learn With Us!
             </h2>
-            <p className="text-base md:text-lg text-primary/90 mb-6 md:mb-8">
+            <p className="text-base md:text-base text-primary/90 mb-6 md:mb-8">
               Looking to showcase your skills and talents? Collaborate with us
               and turn your expertise into a rewarding experience.
             </p>
@@ -186,7 +186,7 @@ export default function LandingPage() {
               {/* Keep button centered */}
               <Link
                 href="/contact"
-                className="inline-block bg-secondary px-6 py-3 md:px-8 md:py-4 rounded-lg text-white hover:bg-secondary/90 transition-colors duration-300 text-base md:text-lg font-medium"
+                className="inline-block bg-black px-6 py-3 md:px-8 md:py-4 rounded text-white hover:bg-black/90 transition-colors duration-300 text-base md:text-lg font-medium"
               >
                 Discover Opportunities
               </Link>
@@ -195,7 +195,7 @@ export default function LandingPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-primary mt-12 mb-6 md:mb-8">
               Partnership & Franchise Opportunities
             </h2>
-            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+            <p className="text-base md:text-base text-primary/90 leading-relaxed">
               Join the Vally Fabrics and Fashion family and take your business
               to the next level. We're dedicated to helping entrepreneurs
               succeed by offering opportunities to set up franchises and retail
@@ -209,7 +209,7 @@ export default function LandingPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-primary mt-12 mb-6 md:mb-8">
             Wedding Consultants / Event Managers
             </h2>
-            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+            <p className="text-base md:text-base text-primary/90 leading-relaxed">
               We understand the importance of elegance and perfection for your
               events. At Vally Fabrics and Fashion, we specialize in customized
               bridal wear tailored to perfection, stunning party dresses to make
@@ -221,22 +221,22 @@ export default function LandingPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-primary mt-12 mb-6 md:mb-8">
               Students & Designers
             </h2>
-            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+            <p className="text-base md:text-base text-primary/90 leading-relaxed">
               Are you a fashion or interior design student looking for a
               platform to grow your skills? We offer:
             </p>
             <ul className=" max-w-2xl mx-auto mb-6 md:mb-8 pl-0 ">
-              <p className="flex items-start gap-3 text-base md:text-lg text-primary/90 ">
+              <p className="flex items-start gap-3 text-base md:text-base text-primary/90 ">
               <span>-</span>Access to our state-of-the-art designing and weaving studio
               </p>
-              <p className="flex items-start gap-3 text-base md:text-lg text-primary/90">
+              <p className="flex items-start gap-3 text-base md:text-base text-primary/90">
               <span>-</span>Mentorship programs to enhance your professional journey
               </p>
-              <p className="flex items-start gap-3 text-base md:text-lg text-primary/90">
+              <p className="flex items-start gap-3 text-base md:text-base text-primary/90">
               <span>-</span>Hands-on experience in retailing your creations through our sales centers
               </p>
             </ul>
-            <p className="text-base md:text-lg text-primary/90 leading-relaxed">
+            <p className="text-base md:text-base text-primary/90 leading-relaxed">
               Take the next step in your design career with Valley Fabrics and
               Fashion. Contact us to get started!
             </p>

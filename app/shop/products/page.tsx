@@ -19,7 +19,7 @@ export default function ProductsPage() {
 function ProductsPageSkeleton() {
   const limit = 9; // Match the limit used in ProductGrid for skeleton count
   return (
-    <div className="flex flex-col md:flex-row gap-8">
+    <div className="flex flex-col-2 md:flex-row gap-8">
       {/* Skeleton for Desktop Filters */}
       <div className="hidden md:block w-64 shrink-0">
         <div className="sticky top-24 space-y-6 animate-pulse">

@@ -53,7 +53,7 @@ function useArrowButton(emblaApi: any) {
   };
 }
 
-// Dot Navigation Hook and Component (keep existing implementation)
+// Dot Navigation Hook and Component
 function useDotButton(emblaApi: any) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
@@ -156,8 +156,8 @@ export default function ProductDetailPage({ serverProduct }: Props) {
   const handleShare = async () => {
     try {
       const shareData = {
-        title: product.name,
-        text: `Check out ${product.name} - ₹${product.price}`,
+        title: product?.name,
+        text: `Check out ${product?.name} - ₹${product?.price}`,
         url: window.location.href,
       };
 
@@ -209,131 +209,100 @@ export default function ProductDetailPage({ serverProduct }: Props) {
     }
   };
 
-  // Return JSX with added arrows
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Existing breadcrumb navigation */}
-      <div className="mb-4">
-        <nav className="flex text-sm text-gray-500">
-          <Link href="/" className="hover:text-rosegold">
-            Home
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/shop/products" className="hover:text-rosegold">
-            Products
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-900">{product.name}</span>
-        </nav>
-      </div>
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Breadcrumb Navigation */}
+        <div className="mb-8">
+          <nav className="flex text-sm font-medium">
+            <Link 
+              href="/" 
+              className="text-gray-500 hover:text-black transition-colors duration-200"
+            >
+              Home
+            </Link>
+            <span className="mx-3 text-gray-300">/</span>
+            <Link 
+              href="/shop/products" 
+              className="text-gray-500 hover:text-black transition-colors duration-200"
+            >
+              Products
+            </Link>
+            <span className="mx-3 text-gray-300">/</span>
+            <span className="text-black">{product?.name}</span>
+          </nav>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Product Images */}
-        <div className="space-y-8">
-          {/* Main Carousel with Arrows */}
-          <div
-            className="embla relative overflow-hidden rounded-lg"
-            ref={emblaRef}
-          >
-            <div className="embla__container">
-              {product.variants[selectedVariantIndex].images.map(
-                (image, index) => (
-                  <div className="embla__slide aspect-square" key={index}>
-                    <Image
-                      src={
-                        `${image}?tr=w-800,h-800,cm-pad_resize,bg-FFFFFF` ||
-                        "/placeholder.svg"
-                      }
-                      alt={product.name}
-                      width={800}
-                      height={800}
-                      className="h-full w-full object-cover"
-                      priority
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16">
+          {/* Product Images Section */}
+          <div className="space-y-6">
+            {/* Main Carousel */}
+            <div className="relative group">
+              <div
+                className="embla overflow-hidden rounded-2xl bg-gray-50 shadow-sm"
+                ref={emblaRef}
+              >
+                <div className="embla__container">
+                  {product.variants[selectedVariantIndex].images.map(
+                    (image, index) => (
+                      <div className="embla__slide aspect-square" key={index}>
+                        <Image
+                          src={
+                            `${image}?tr=w-800,h-800,cm-pad_resize,bg-FFFFFF` ||
+                            "/placeholder.svg"
+                          }
+                          alt={product.name}
+                          width={800}
+                          height={800}
+                          className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
+                          priority
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {/* Navigation Arrows */}
+                {currentVariantImages.length > 1 && (
+                  <>
+                    <button
+                      onClick={handlePrev}
+                      disabled={!canScrollPrev}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 opacity-0 group-hover:opacity-100"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      disabled={!canScrollNext}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 opacity-0 group-hover:opacity-100"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Dots Pagination */}
+              {currentVariantImages.length > 1 && (
+                <div className="flex justify-center gap-2 mt-4">
+                  {scrollSnaps.map((_, index) => (
+                    <DotButton
+                      key={index}
+                      onClick={() => onDotButtonIndex(index)}
+                      className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                        index === selectedIndex 
+                          ? "bg-black w-8" 
+                          : "bg-gray-300 hover:bg-gray-400"
+                      }`}
                     />
-                  </div>
-                )
+                  ))}
+                </div>
               )}
             </div>
 
-            {currentVariantImages.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrev}
-                  disabled={!canScrollPrev}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={handleNext}
-                  disabled={!canScrollNext}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* Dots Pagination */}
-          {currentVariantImages.length > 1 && (
-            <div className="embla__dots mt-4 flex justify-center gap-2">
-              {scrollSnaps.map((_, index) => (
-                <DotButton
-                  key={index}
-                  onClick={() => onDotButtonClick(index)}
-                  className={`h-2 w-2 rounded-full transition-colors ${
-                    index === selectedIndex ? "bg-gray-500" : "bg-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Thumbnail Carousel (existing implementation) */}
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {product.variants.map((variant, index) => (
-              <button
-                key={variant.color}
-                onClick={() => {
-                  setSelectedVariantIndex(index);
-                  emblaApi?.scrollTo(0); // Reset carousel to first image when variant changes
-                }}
-                className={`flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden ${
-                  selectedVariantIndex === index
-                    ? "border-rosegold"
-                    : "border-gray-200"
-                }`}
-              >
-                <Image
-                  src={variant.images[0] || "/placeholder.svg"}
-                  alt={variant.color}
-                  width={100}
-                  height={100}
-                  className="h-full w-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Product Info (existing implementation) */}
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-primary">{product.name}</h1>
-            <span className="text-sm text-gray-500">
-              Product By: {product.brand}
-            </span>
-          </div>
-
-          <div className="text-2xl font-bold text-primary">
-            ₹{product.price}
-          </div>
-
-          {/* Color Variants */}
-          <div className="flex items-center gap-2">
-            <span className="font-medium">Color:</span>
-            <div className="flex gap-2">
+            {/* Variant Thumbnails */}
+            <div className="flex gap-3 p-2 overflow-x-auto scrollbar-hide">
               {product.variants.map((variant, index) => (
                 <button
                   key={variant.color}
@@ -341,165 +310,187 @@ export default function ProductDetailPage({ serverProduct }: Props) {
                     setSelectedVariantIndex(index);
                     emblaApi?.scrollTo(0);
                   }}
-                  className={`w-8 h-8 rounded-full border-2 ${
+                  className={`flex-shrink-0 w-20 h-20 rounded overflow-hidden transition-all duration-200 ${
                     selectedVariantIndex === index
-                      ? "border-rosegold"
-                      : "border-gray-300"
+                      ? "shadow shadow-gray-300 border border-gray-300"
+                      : "shadow"
                   }`}
-                  style={{ backgroundColor: variant.color }}
-                  title={variant.color}
-                />
+                >
+                  <Image
+                    src={variant.images[0] || "/placeholder.svg"}
+                    alt={variant.color}
+                    width={80}
+                    height={80}
+                    className="h-full w-full object-cover"
+                  />
+                </button>
               ))}
             </div>
           </div>
 
-            
-          {/* {product.sizes && (
-            <div>
-              <h3 className="font-medium mb-2">Size</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.sizes.map((size, index) => (
+          {/* Product Information Section */}
+          <div className="space-y-4">
+            {/* Product Header */}
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold text-primary leading-tight">
+                {product?.name}
+              </h1>
+              <p className="text-gray-400 font-thin">
+                Brand: {product?.brand}
+              </p>
+            </div>
+
+            {/* Price */}
+            <div className="py-4 border-y border-gray-100">
+              <span className="text-2xl font-bold text-primary">
+                ₹{product?.price.toLocaleString()}
+              </span>
+            </div>
+
+            {/* Color Selection */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium text-black">Color</h3>
+                <span className="text-sm text-gray-600 capitalize">
+                  {product?.variants[selectedVariantIndex].color}
+                </span>
+              </div>
+              <div className="flex gap-3">
+                {product.variants.map((variant, index) => (
                   <button
-                    key={index}
-                    onClick={() => setSelectedSize(size)}
-                    className={`w-12 h-12 flex items-center justify-center border rounded-md ${
-                      selectedSize === size
-                        ? "border-rosegold bg-rosegold/10 text-rosegold"
-                        : "border-gray-300 hover:border-rosegold"
+                    key={variant.color}
+                    onClick={() => {
+                      setSelectedVariantIndex(index);
+                      emblaApi?.scrollTo(0);
+                    }}
+                    className={`w-10 h-10 rounded-full border transition-all duration-200 ${
+                      selectedVariantIndex === index
+                        ? "border-black ring-1 ring-gray-500 ring-offset-2"
+                        : "border-gray-300 hover:border-gray-400"
                     }`}
-                  >
-                    {size}
-                  </button>
+                    style={{ backgroundColor: variant.color }}
+                    title={variant.color}
+                  />
                 ))}
               </div>
             </div>
-          )} */}
 
-
-          {
-            product?.sizes && product.sizes[0] !== "NA" ? (
-              <div>
-              <h3 className="font-medium mb-2">Size</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.sizes.map((size, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedSize(size)}
-                    className={`w-12 h-12 flex items-center justify-center border rounded-md ${
-                      selectedSize === size
-                        ? "border-rosegold bg-rosegold/10 text-rosegold"
-                        : "border-gray-300 hover:border-rosegold"
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-            )  : (
-              <div>
-              <h3 className="font-medium mb-2">Size</h3>
-              <div className="flex flex-wrap gap-2">
-                  <button
-                    className={`h-12`}>
-                    Not Applicable For This Product
-                  </button>
-              </div>
-            </div>
-            )
-          }
-
-          <div>
-            <h3 className="font-medium mb-2">Quantity</h3>
-            <div className="flex items-center border rounded-md w-32">
-              <button
-                className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-primary"
-                onClick={() => handleQuantityChange("decrease")}
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-              <input
-                type="number"
-                min="1"
-                value={quantity}
-                className="w-12 text-center border-0 focus:ring-0"
-                readOnly
-              />
-              <button
-                className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-primary"
-                onClick={() => handleQuantityChange("increase")}
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              className="flex-1 bg-rosegold hover:bg-rosegold/90"
-              onClick={handleBuyNow}
-            >
-              <Heart className="mr-2 h-4 w-4" />
-              Buy Now - Through WhatsApp
-            </Button>
-
-            <AddToCartButton
-              product={{
-                id: product._id,
-                name: product.name,
-                vallyId: product.vallyId,
-                price: product.price,
-                size: selectedSize,
-                image: product.image,
-                color:
-                  product.variants[selectedVariantIndex].color ||
-                  "Colour not selected",
-                quantity: 1,
-              }}
-              varient={"outline"}
-              className={
-                "flex-1  border-rosegold  text-rosegold hover:bg-rosegold/10"
-              }
-            />
-
-            {/* <Button
-                      onClick={handleAddToCart}
-                      variant="outline"
-                      className="flex-1 border-rosegold text-rosegold hover:bg-rosegold/10"
+            {/* Size Selection */}
+            {product?.sizes && product.sizes[0] !== "NA" ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-black">Size</h3>
+                  {selectedSize && (
+                    <span className="text-sm text-gray-600">{selectedSize}</span>
+                  )}
+                </div>
+                <div className="grid grid-cols-6 gap-2 md:grid-cols-10">
+                  {product.sizes.map((size, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedSize(size)}
+                      className={`h-12 w-12 flex items-center justify-center border border-gray-400 rounded-xl font-medium transition-all duration-200 ${
+                        selectedSize === size
+                          ? "border-black bg-black text-white"
+                          : "border-gray-300 hover:border-gray-400 text-black"
+                      }`}
                     >
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      Add to Cart
-                    </Button> */}
-          </div>
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-black">Size</h3>
+                <p className="text-gray-600 py-3 px-4 bg-gray-50 rounded-lg">
+                  Size not applicable for this product
+                </p>
+              </div>
+            )}
 
-          <div className="pt-4 border-t flex items-center justify-between text-sm text-gray-500">
-            <div>Vally ID: {product.vallyId?.toString()}</div>
-            <button
-              onClick={handleShare} //sharing the product
-              className="flex items-center hover:text-rosegold"
-            >
-              <Share2 className="mr-1 h-4 w-4" />
-              Share
-            </button>
+            {/* Quantity Selection */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-black">Quantity</h3>
+              <div className="flex items-center border border-gray-400 rounded-lg w-fit">
+                <button
+                  className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-50 transition-colors duration-200 m-1"
+                  onClick={() => handleQuantityChange("decrease")}
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  className="w-16 h-12 text-center border-0 focus:ring-0 font-medium"
+                  readOnly
+                />
+                <button
+                  className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-50 transition-colors duration-200 m-1"
+                  onClick={() => handleQuantityChange("increase")}
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-4 pt-6">
+              <Button
+                className="w-full h-14 bg-black hover:bg-gray-800 text-white font-medium text-lg rounded transition-all duration-200 shadow-lg hover:shadow-xl"
+                onClick={handleBuyNow}
+              >
+                <Heart className="mr-3 h-5 w-5" />
+                Buy Now - Through WhatsApp
+              </Button>
+
+              <AddToCartButton
+                product={{
+                  id: product?._id,
+                  name: product?.name,
+                  vallyId: product?.vallyId,
+                  price: product?.price,
+                  size: selectedSize,
+                  image: product?.image,
+                  color:
+                    product?.variants[selectedVariantIndex]?.color ||
+                    "Colour not selected",
+                  quantity: 1,
+                }}
+                varient={"outline"}
+                className="w-full h-14 border border-black text-black hover:bg-black hover:text-white font-medium text-lg rounded transition-all duration-200"
+              />
+            </div>
+
+            {/* Product Meta & Share */}
+            <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Product ID:</span> {product?.vallyId?.toString()}
+              </div>
+              <button
+                onClick={handleShare}
+                className="flex items-center text-sm text-gray-600 hover:text-black transition-colors duration-200 font-medium"
+              >
+                <Share2 className="mr-2 h-4 w-4" />
+                Share Product
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Product Description Section (existing implementation) */}
-      <div className="mt-16">
-        <div className="border-b">
-          <div className="flex overflow-x-auto">
-            <button className="px-4 py-2 font-medium text-rosegold border-b-2 border-rosegold">
+        {/* Product Description Section */}
+        <div className="mt-20">
+          <div className="border-b border-gray-200">
+            <button className="px-6 py-4 font-medium text-black border-b-2 border-black text-lg">
               Product Description
             </button>
           </div>
-        </div>
 
-        <div className="py-3">
-          <div className="prose grid grid-cols-1 max-w-none text-gray-600">
-            <div>
-              <div className=" text-primary font-bold whitespace-pre-line">
-                {product.description || "No description available"}
+          <div className="py-8">
+            <div className="prose max-w-none">
+              <div className="text-gray-700 leading-relaxed whitespace-pre-line text-lg">
+                {product?.description || "No description available for this product."}
               </div>
             </div>
           </div>
@@ -508,3 +499,6 @@ export default function ProductDetailPage({ serverProduct }: Props) {
     </div>
   );
 }
+
+
+//code of product details page improved 

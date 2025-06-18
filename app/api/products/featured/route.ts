@@ -20,7 +20,6 @@ export async function GET() {
 
     const products = featuredProducts.map(fp => fp.productId)
 
-    console.log('Featured Products:', products)
 
     return NextResponse.json(products)
   } catch (error) {

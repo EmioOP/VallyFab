@@ -258,7 +258,7 @@ export default function Header() {
                 variant="ghost"
                 size="icon"
                 aria-label="Cart"
-                className="relative"
+                className="relative hover:bg-gray-900"
               >
                 <ShoppingBag className="h-5 w-5" />
                 {totalItems > 0 && (

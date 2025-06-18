@@ -29,7 +29,7 @@ const config: Config = {
           foreground: "#FFFFFF", // White
         },
         secondary: {
-          DEFAULT: "#B76E79", // Rose gold
+          DEFAULT: "#333333", // Rose gold
           foreground: "#FFFFFF",
         },
         accent: {
@@ -52,8 +52,8 @@ const config: Config = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-        rosegold: "#B76E79",
-        santoriniblue: "#3A6EA5",
+        rosegold: "#000000",
+        santoriniblue: "#000000",
       },
       borderRadius: {
         lg: "var(--radius)",

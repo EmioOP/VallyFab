@@ -34,7 +34,7 @@ export default function Hero() {
               individual.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button onClick={handleShop} size="lg" className="bg-rosegold hover:bg-rosegold/90">
+              <Button onClick={handleShop} size="lg" className="bg-black hover:bg-black/90">
                 Shop Now
               </Button>
               {/* <Button size="lg" variant="outline" className="border-rosegold text-rosegold hover:bg-rosegold/10">
