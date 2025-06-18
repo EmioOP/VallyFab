@@ -8,7 +8,7 @@ export default function FeaturedProducts() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await fetch(`/api/products/featured`);
+      const response = await fetch(`/api/products/featured`,{cache:"force-cache"});
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
