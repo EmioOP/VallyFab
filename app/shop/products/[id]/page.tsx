@@ -4,7 +4,9 @@ import ProductDetailPage from '@/components/ProductDetailsPage';
 
 async function getProduct(id: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`,{
+      cache:'force-cache'
+    });
     if (!res.ok) return null;
     return await res.json();
   } catch (error) {
