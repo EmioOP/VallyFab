@@ -1,4 +1,5 @@
 import mongoose,{Schema} from "mongoose";
+import "./productModel";
 
 export interface IFeaturedProduct{
     _id?: mongoose.Types.ObjectId;

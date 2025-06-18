@@ -15,7 +15,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
         const { id } = await params
 
-        console.log("id----", id)
 
         if (!isValidObjectId(id)) {
             return NextResponse.json({ error: "invalid category id" }, { status: 409 })
