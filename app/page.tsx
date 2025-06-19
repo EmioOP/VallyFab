@@ -1,7 +1,8 @@
 
-
 import Link from "next/link";
 import Image from "next/image";
+
+
 
 
 export default function LandingPage() {
@@ -28,6 +29,10 @@ export default function LandingPage() {
     },
   ];
 
+
+  
+  
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -42,14 +47,14 @@ export default function LandingPage() {
                 className="object-contain"
               />
             </div>
-            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-primary px-2">
-              Vally Fabrics and{" "}
-              <span className="lg:bg-black lg:text-white px-1 block md:inline mt-2 md:mt-0">
+            <h1 className={`text-3xl md:text-4xl lg:text-6xl font-semibold  text-primary px-2 ` } >
+              Vally Fabrics and Fashion
+              {/* <span className="  px-1 block md:inline mt-2 md:mt-0">
                 Fashion
-              </span>
+              </span> */}
             </h1>
           </div>
-          <p className="text-lg md:text-2xl text-primary/90 mb-6 md:mb-8 max-w-3xl mx-auto px-4">
+          <p className={`text-lg md:text-2xl text-primary/90 mb-6 md:mb-8 max-w-3xl mx-auto px-4 `}>
             Where Style, Comfort and Quality Come Together
           </p>
 
